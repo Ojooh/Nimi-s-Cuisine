@@ -7,13 +7,21 @@ const path = require('path');
 const fs = require('fs');
 const img_path = { "events": "public/images/event_files/", "cats": "public/images/cat_files/", "user": "public/images/user_files/", "slider": "public/images/slider/" };
 const saltRounds = 10;
+const sidebar = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" }
 
 
 //Function To Render Dashboard
 module.exports.getDashboard = async (req, res, next) => {
     console.log(req.session.loggedin)
     if (req.session.loggedin) {
-        let context = {};
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+        const sidebar = { dash: "active", web: "", prd: "", ords: "", pays: "", usrs: "" }
+        let context = { user: User[0], sidebar: sidebar };
         res.render('admin/index', context);
         // var email = req.session.username;
         // var user = await DB.getUserByEmail(email);
@@ -91,3 +99,24 @@ module.exports.getDashboard = async (req, res, next) => {
     }
 };
 
+//Function To Render NavLinks Page
+module.exports.getNavLinks = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+        var icon = "fas fa-link";
+        var title = "Navbar Links"
+        const sidebar = { dash: "", web: "active", prd: "", ords: "", pays: "", usrs: "" }
+        sidebar.nav_link = "active";
+        let context = { user: User[0], sidebar: sidebar, icon: icon, title: title };
+        res.render('admin/navLink', context);
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};

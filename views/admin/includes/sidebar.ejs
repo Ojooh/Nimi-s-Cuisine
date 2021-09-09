@@ -1,0 +1,79 @@
+<nav id="sidebar" class="bg-Dark">
+    <div class="sidebar-header logo-box">
+        <a class="navbar-brand brand-logo mr-5" href="index.html">
+            <img src="/img/logo/logo.png" class="img-fluid" alt="logo">
+        </a>
+    </div>
+
+    <ul class="list-unstyled CTAs">
+        <li class="<%= sidebar.dash %>">
+            <a href="/admin">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+        </li>
+        <li class="<%= sidebar.web %>">
+            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="<%= ((sidebar.web && sidebar.web !== '') ? true : false)  %>" 
+                class="dropdown-toggle">
+                <i class="far fa-file"></i> Website
+            </a>
+            <ul class="collapse list-unstyled <%= ((sidebar.web && sidebar.web !== '') ? 'show' : '')  %>" id="homeSubmenu">
+                <li class="<%= ((sidebar.nav_link && sidebar.nav_link !== '') ? sidebar.nav_link : '')  %>">
+                    <a href="/admin/navbar-links">
+                        <i class="fas fa-link"></i> Navbar Links
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                    <i class="fas fa-sliders-h"></i> Slider
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                    <i class="fas fa-share-alt"></i> Social Links
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        Advertisement
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                    <i class="fas fa-users"></i> Testimonials
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                    <i class="far fa-images"></i> Gallery
+                    </a>
+                </li>
+                <li>
+                    <a href="#">Events</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="<%= sidebar.prd %>">
+            <a href="#">
+                <i class="fab fa-product-hunt"></i> Product
+            </a>
+        </li>
+        <li class="<%= sidebar.ords %>">
+            <a href="#">
+            <i class="fas fa-sort-amount-up"></i> Orders
+            </a>
+        </li>
+        <li class="<%= sidebar.pays %>">
+            <a href="#">
+            <i class="fas fa-money-bill-wave"></i> Payments
+            </a>
+        </li>
+        <li class="<%= sidebar.usrs %>">
+            <a href="#">
+            <i class="fas fa-user-shield"></i> Users
+            </a>
+        </li>
+    </ul>
+
+
+</nav>

@@ -6,6 +6,11 @@ var adminHandler = require('../controllers/admin_controller');
 /* GET home page. */
 router.get('/', adminHandler.getDashboard);
 
+/* GET home page. */
+router.get('/navbar-links', adminHandler.getNavLinks);
+
+
+
 
 
 
