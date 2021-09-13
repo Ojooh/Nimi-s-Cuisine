@@ -44,6 +44,7 @@ html {
   background-position: center 30%;
   background-size: cover;
   background-attachment: fixed;
+  height: 100vh;
 }
 
 .container-fluid .form-box {

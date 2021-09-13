@@ -20,7 +20,7 @@
                 <!-- Add Button Modal-->
                 <div class="row">
                     <div class="col-12">
-                        <div class="float-left mdl-task-form my-4">
+                        <div id="navLinkAdd" class="float-left my-4">
                             <a href="#" class="btn btn-outline-nm">
                                 <i class="fas fa-plus"></i>
                                 Create A New Link
@@ -36,35 +36,104 @@
                 <div class="row">
                     <div class="col-md-8 grid-margin stretch-card">
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-header">
                                 <h4 class="card-title text-center">Nav Links</h4>
+                            </div>
+                            <div class="card-body">
+                            <% if (links && links.length > 0) { %>
+                                
                                 <div class="list-wrapper pt-2">
-                                    <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-
-                                        <li>
-                                            <div class="form-check form-check-flat">
-                                                <label class="form-check-label">
-                                                    <input class="checkbox" type="checkbox">
-                                                    Meeting with Urban Team
-                                                    <i class="input-helper"></i></label>
+                                    <ul class="todo-list todo-list-custom">
+                                    <% 
+                                        for (var l = 0; l < links.length; l++) {
+                                            var par = links[l].id
+                                    %>
+                                        <% if (links[l].parent == 0) { %>
+                                            <li>
+                                                <div class="form-check form-check-flat">
+                                                    <label class="form-check-label">
+                                                <% if (links[l].is_active == '1') { %>
+                                                    <input class="checkbox active" value="0" id="<%= links[l].id %>" data-name="<%= links[l].name %>" type="checkbox" checked>
+                                                <% } else { %>
+                                                    <input class="checkbox active" value="1" id="<%= links[l].id %>" data-name="<%= links[l].name %>" type="checkbox">
+                                                <% } %>
+                                                        <%= links[l].name %>
+                                                        <i class="input-helper"></i>
+                                                    </label>
+                                                </div>
+                                                <div class="icons-right float-left">
+                                                    <i class="edit far fa-edit" data-id="<%= links[l].id %>" data-name="<%= links[l].name %>"></i>
+                                                    <i class="plus fas fa-plus" data-id="<%= links[l].id %>" data-name="<%= links[l].name %>"></i>
+                                                    <i class="remove fas fa-times" data-id="<%= links[l].id %>" data-name="<%= links[l].name %>"></i>
+                                                    <i class="caret fas fa-angle-down" data-id="<%= links[l].id %>"></i>
+                                                </div>
+                                                
+                                            </li>
+                                            <div id="par-<%= par %>" class="sub-links deactivated px-5">
+                                                <% for (var f=0; f < links.length; f++) { %>
+                                                    <% if (links[f].parent==par) { %>
+                                                        <li>
+                                                            <div class="form-check form-check-flat">
+                                                                <label class="form-check-label">
+                                                                    <% if (links[f].is_active=='1' ) { %>
+                                                                        <input class="checkbox active" value="0" id="<%= links[f].id %>"
+                                                                            data-name="<%= links[f].name %>" type="checkbox" checked>
+                                                                        <% } else { %>
+                                                                            <input class="checkbox active" value="1" id="<%= links[f].id %>"
+                                                                                data-name="<%= links[f].name %>" type="checkbox">
+                                                                            <% } %>
+                                                                                <%= links[f].name %>
+                                                                                    <i class="input-helper"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div class="icons-right float-left">
+                                                                <i class="edit far fa-edit" data-id="<%= links[f].id %>" data-name="<%= links[f].name %>"></i>
+                                                                <i class="remove fas fa-times" data-id="<%= links[f].id %>" data-name="<%= links[f].name %>"></i>
+                                                            </div>
+                                            
+                                                        </li>
+                                                        <% } %>
+                                                            <% } %>
                                             </div>
-                                            <i class="remove fas fa-times"></i>
-                                        </li>
+                                        <% } %>
                                         
+                                    <% } %>
                                     </ul>
                                 </div>
-                                
+                            <% } else { %>
+                                <div class="text-danger text-center alert alert-success d-flex w-100">
+                                    No Links Available
+                                </div>
+                            <% }  %>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-md-4 grid-margin stretch-card">
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-header">
                                 <h4 class="card-title text-center">Activities</h4>
-                                <div class="list-wrapper pt-2">
-                                    
+                            </div>
+                            <div class="card-body">
+                            <% if (acts && acts.length > 0) { %>
+                                <div class="row user-activity-card mb-2">
+                                <% for (var l=0; l < acts.length; l++) { %>
+                                    <div class="col-12">
+                                        <h6 class="mb-0"><%= acts[l].activity_by %></h6>
+                                        <p class="text-muted mb-0"><%= acts[l].title %>.</p>
+                                        <p class="text-muted pretty-timer mb-0">
+                                            <i class="far fa-clock"></i>
+                                            <span class="pretty-timers"><%= acts[l].date_created %></span>
+                                        </p>
+                                    </div>
+                                    <div class="line"></div>
+                                <% } %>
                                 </div>
+                            <% } else { %>
+                                <div class="text-danger text-center alert alert-success d-flex w-100">
+                                    No Activities Available
+                                </div>
+                            <% } %>
                     
                             </div>
                         </div>
@@ -77,10 +146,18 @@
 
         </div>
     </div>
+
+<% include includes/modal_1 %>
         
 </body>
         
 <script src="/js/bootstrap/popper.min.js+bootstrap.min.js.pagespeed.jc.sIO8dxRblt.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+    integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/js/custom/design.js"></script>
+<script type="module" src="/js/custom/validator.js"></script>
+<script type="module" src="/js/custom/helper.js"></script>
+<script type="module" src="/js/custom/script_2.js"></script>
 
 </html>

@@ -1,6 +1,19 @@
 // const User = require('./db_controller');
 var helper = require("./helper");
 
+module.exports.validNavLinkName = (req,) => {
+
+    if (helper.isEmpty(req.body.name) || (helper.validateName(req.body.name) == false)) {
+        return [null, false, { message: 'Nav Link Name Input is not Valid' }];
+    }
+    else {
+        var slug = req.body.name.toLowerCase();
+        return [slug, true, { message: req.body.name + ' Nav Link Profile Created successfully' }];
+    }
+
+
+};
+
 module.exports.validEvent = async (req,) => {
 
     if (helper.isEmpty(req.body.e_name)) {
@@ -55,18 +68,18 @@ module.exports.validCustomer = async (req,) => {
     }
 };
 
-module.exports.validUser = async (req, ) => {
+module.exports.validUser = async (req,) => {
     var exist = await helper.emailExist(req.body.U_email);
 
     if (helper.isEmpty(req.body.U_fname) || helper.validateName(req.body.U_fname) == false) {
         return [null, false, { message: 'User First Name Input is Invalid only character and Whitespace Allowed.' }];
     } else if (helper.isEmpty(req.body.U_lname) || helper.validateName(req.body.U_lname) == false) {
-        return [null, false, {message: 'User Last Name Input is Invalid only character and Whitespace Allowed.' }];
+        return [null, false, { message: 'User Last Name Input is Invalid only character and Whitespace Allowed.' }];
     } else if (helper.isEmpty(req.body.U_email) || helper.validateEmail(req.body.U_email) == false) {
         return [null, false, { message: 'User Email Input is Invalid.' }];
     } else if (req.body.type == "add" && exist) {
         return [null, false, { message: 'Email Input already Exist In Database' }];
-    } else if (!helper.isEmpty(req.body.U_pass) &&  helper.validatePass(req.body.U_pass) == false) {
+    } else if (!helper.isEmpty(req.body.U_pass) && helper.validatePass(req.body.U_pass) == false) {
         return [null, false, { message: 'User Password Input is Invalid only must be more than 6 characters."' }];
     } else if (helper.isEmpty(req.body.U_contact) && isNaN(req.body.U_contact)) {
         return [null, false, { message: 'User Contact Field must be number.' }];
@@ -77,7 +90,7 @@ module.exports.validUser = async (req, ) => {
     }
 };
 
-module.exports.validSlider = async (req, ) => {
+module.exports.validSlider = async (req,) => {
     if (helper.isEmpty(req.body.s_name)) {
         return [null, false, { message: 'Slider Name field is compulsory.' }];
     } else if ((req.body.type == "add") && (!req.files || helper.isImage(req.files.s_image) == false)) {

@@ -244,12 +244,30 @@ const showError = (e_title, e_msg, e_class) => {
     }, 5000);
 };
 
+const swalShowError = (e_msg, e_class) => {
+    var error = document.getElementById(e_class);
+    error.innerHTML = e_msg;
+    error.style.display = "block";
+};
+
+const swalShowLoading = (title, msg, timer = 40000) => {
+    Swal.fire({
+        title: title,
+        html: msg,
+        timer: timer,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        allowOutsideClick: false,
+    });
+};
+
+
 
 
 export {
     showError, isEmpty, validFutureDate, validateName, validateNamey, validateEmail, validateUsername, validateTel,
     validatePass, validateAge, validFBLink, validIGLink, validtwitterLink, generateUserType, isImage,
-    isDoc, splitArray, paginateArray, validGreaterDate, validYTLink,
+    isDoc, splitArray, paginateArray, validGreaterDate, validYTLink, swalShowError, swalShowLoading
 }
 
 

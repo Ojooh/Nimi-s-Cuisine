@@ -16,6 +16,15 @@ const validateLogin = (userDetails) => {
         return [null, true, { message: 'User Profile is Valid' }];
     }
 
+};
+
+const validateNavName = (name) => {
+    if (isEmpty(name) || (validateName(name) == false)) {
+        return [null, false, { message: 'Nav Link Name Input is not Valid' }];
+    }
+    else {
+        return [null, true, { message: 'Nav Link Name Input is Valid' }];
+    }
 }
 
 // let r;
@@ -119,4 +128,4 @@ const validateProfilePic = (pp) => {
 }
 
 
-export { validateLogin }
+export { validateLogin, validateNavName }

@@ -48,40 +48,55 @@ module.exports.logIn = async (req, res, next) => {
 
 }
 
-module.exports.generateSelectSQL = (param1, param2, param3) => {
+module.exports.generateSelectSQL = (param1, param2, param3, param4 = "") => {
     let what = param1.join();
     let from = param2;
     let obj = param3
     let where = '(';
+    if (obj && obj != "") {
+        console.log(obj);
+        Object.keys(obj).forEach(function (key) {
+            j = obj[key]
+            console.log(j)
+            if (j[j.length - 1] == '&') {
+                const val = j.slice(0, -1)
+                where = where + key + " = '" + val + "') AND (";
+            }
+            else if (j[j.length - 1] == '/') {
+                const val = j.slice(0, -1)
+                where = where + key + " = '" + val + "') OR (";
+            }
+            else if (j[j.length - 1] == '&' && j[0] == '!') {
+                const val = j.slice(1, -1)
+                where = where + key + " != '" + val + "') AND (";
+            }
+            else if (j[j.length - 1] == '/' && j[0] == '!') {
+                const val = j.slice(1, -1)
+                where = where + key + " != '" + val + "') OR (";
+            }
+            else if (j[0] == '!') {
+                const val = j.slice(1, -1)
+                where = where + key + " != '" + val + "')";
+            }
+            else {
+                where = where + key + " = '" + j + "')";
+            }
+        });
+    }
 
-    Object.keys(obj).forEach(function (key) {
-        j = obj[key]
-        if (j[j.length - 1] == '&') {
-            const val = j.slice(0, -1)
-            where = where + key + " = '" + val + "') AND (";
-        }
-        else if (j[j.length - 1] == '/') {
-            const val = j.slice(0, -1)
-            where = where + key + " = '" + val + "') OR (";;
-        }
-        else if (j[j.length - 1] == '&' && j[0] == '!') {
-            const val = j.slice(1, -1)
-            where = where + key + " != '" + val + "') AND (";
-        }
-        else if (j[j.length - 1] == '/' && j[0] == '!') {
-            const val = j.slice(1, -1)
-            where = where + key + " != '" + val + "') OR (";
-        }
-        else if (j[0] == '!') {
-            const val = j.slice(1, -1)
-            where = where + key + " != '" + val + "')";
-        }
-        else {
-            where = where + key + " = '" + j + "')";
-        }
-    });
+    if (obj && obj != "") {
 
-    return "SELECT " + what + " FROM " + from + " WHERE " + where;
+        if (param4 && param4 != "") {
+            return "SELECT " + what + " FROM " + from + " WHERE " + where + " " + param4;
+        }
+        return "SELECT " + what + " FROM " + from + " WHERE " + where;
+    }
+    else {
+        if (param4 && param4 != "") {
+            return "SELECT " + what + " FROM " + from + " " + param4;
+        }
+        return "SELECT " + what + " FROM " + from;
+    }
 }
 
 module.exports.generateUpdateSQL = (param1, param2, param3) => {
@@ -119,21 +134,20 @@ module.exports.generateInsertSQL = (param1, param2, param3) => {
     let col = '(';
     let obj = param2;
     let value = '(';
-    
+
     Object.keys(obj).forEach(function (key) {
-        j = obj[key];
         col = col + "`" + key + "`,";
     });
     col = col.slice(0, -1) + ")";
 
     Object.keys(param3).forEach(function (key) {
         j = param3[key];
-        value = value + "'" + j +  "', ";
+        value = value + "'" + j + "', ";
     });
-    
+
     value = value.slice(0, - 2) + ")";
 
-    return "INSERT INTO " + from + " " + col +  " VALUES " + value;
+    return "INSERT INTO " + from + " " + col + " VALUES " + value;
 }
 
 module.exports.runSQLQuery = (sql) => {
@@ -149,6 +163,47 @@ module.exports.runSQLQuery = (sql) => {
         });
     });
 };
+
+module.exports.generateDeleteSQL = (param1, param2,) => {
+    let from = param1;
+    let obj = param2
+    let where = '(';
+    if (obj && obj != "") {
+        console.log(obj);
+        Object.keys(obj).forEach(function (key) {
+            j = obj[key]
+            console.log(j)
+            if (j[j.length - 1] == '&') {
+                const val = j.slice(0, -1)
+                where = where + key + " = '" + val + "') AND (";
+            }
+            else if (j[j.length - 1] == '/') {
+                const val = j.slice(0, -1)
+                where = where + key + " = '" + val + "') OR (";
+            }
+            else if (j[j.length - 1] == '&' && j[0] == '!') {
+                const val = j.slice(1, -1)
+                where = where + key + " != '" + val + "') AND (";
+            }
+            else if (j[j.length - 1] == '/' && j[0] == '!') {
+                const val = j.slice(1, -1)
+                where = where + key + " != '" + val + "') OR (";
+            }
+            else if (j[0] == '!') {
+                const val = j.slice(1, -1)
+                where = where + key + " != '" + val + "')";
+            }
+            else {
+                where = where + key + " = '" + j + "')";
+            }
+        });
+    }
+
+    if (obj && obj != "") {
+
+        return "DELETE FROM " + from + " WHERE " + where;
+    }
+}
 
 
 
