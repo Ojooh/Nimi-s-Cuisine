@@ -24,6 +24,18 @@ router.post('/navbar-link/sub', adminHandler.createSubNavLink);
 /* POST Sub NavBar Link Profile. */
 router.post('/navbar-link/delete', adminHandler.destroyNavLink);
 
+/* GET Sliders page. */
+router.get('/slider', adminHandler.getSliders);
+
+/* POST New NavBar Link Profile. */
+router.post('/slider', adminHandler.createSlider);
+
+/* POST NavBar Link Profile Edit. */
+router.post('/slider/edit', adminHandler.updateSlider);
+
+/* POST Destroy Slider Profile. */
+router.post('/slider/delete', adminHandler.destroySlider);
+
 
 
 

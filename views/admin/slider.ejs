@@ -1,0 +1,125 @@
+<% include includes/head %>
+
+    <body>
+
+        <div class="wrapper">
+            <!-- Sidebar  -->
+            <% include includes/sidebar %>
+            <!-- Sidebar End -->
+
+            <!-- Top Bar -->
+            <% include includes/topbar %>
+            <!-- Top Bar End -->
+
+            <!-- Page Content  -->
+            <div id="content">
+                <div class="container-fluid">
+                    <!-- Page Title Row -->
+                    <% include includes/pageTitle %>
+                    <!-- Page Title Row End -->
+
+                    <!-- Add Button Modal-->
+                    <div class="row">
+                        <div class="col-12">
+                            <div id="navLinkAdd" class="float-left my-4">
+                                <a href="#" class="btn btn-outline-nm">
+                                    <i class="far fa-edit"></i>
+                                    Edit Landing Text
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Add Button Modal-->
+
+                    <!-- Page Content Row -->
+                    <div class="row">
+
+                        <div class="col-md-8 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title text-center">Sliders</h4>
+                                </div>
+                                <div class="card-body">
+                                    <% if (sliders && sliders.length> 0) { %>
+                                        <div class="row my-3">
+                                        <% if (rank && rank !="" ) { %>
+                                            <div class="col-xl-4 col-6 my-3">
+                                                <div id="<%= rank %>" class="add-slider mx-auto">
+                                                    <span class="icon">
+                                                        <i class="fas fa-plus"></i>
+                                                    </span>
+                                                    Add
+                                                </div>
+                                            </div>
+                                        <% } %>
+
+                                        <% for (var l=0; l < sliders.length; l++) {  %>
+                                            <div class="col-xl-4 col-6 my-3">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h4 class="card-title text-center"><%= sliders[l].slider %></h4>
+                                                    </div>
+                                                    <div class="card-body p-0">
+                                                        <div class="w-100 h-157">
+                                                            <img src="<%= sliders[l].img %>" class="img-fluid" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <div class="row justify-content-space-between">
+                                                            <div class="col-6 text-left">
+                                                                <i class="edit far fa-edit" data-id="<%= sliders[l].id %>" data-name="<%= sliders[l].slider %>" data-img="<%= sliders[l].img %>"></i>
+                                                            </div>
+
+                                                            <div class="col-6 text-right">
+                                                                <i class="remove fas fa-times" data-id="<%= sliders[l].id %>" data-name="<%= sliders[l].slider %>" ></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <% } %>
+                                        </div>
+                                        
+                                    <% } else { %>
+                                        <div class="row my-3">
+                                            <div class="col-12 text-danger text-center alert alert-success w-100">
+                                                No Sliders Available
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2 justify-content-center">
+                                            <div class="col-12">
+                                                <div id="A" class="add-slider mx-auto">
+                                                    <span class="icon">
+                                                        <i class="fas fa-plus"></i>
+                                                    </span>
+                                                    Add
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                    <% include includes/activities %>
+                    </div>
+                    <!-- Page Content Row -->
+
+
+                </div>
+                
+            </div>
+        </div>
+            
+    </body>
+            
+<script src="/js/bootstrap/popper.min.js+bootstrap.min.js.pagespeed.jc.sIO8dxRblt.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+    integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/js/custom/design.js"></script>
+<script type="module" src="/js/custom/validator.js"></script>
+<script type="module" src="/js/custom/helper.js"></script>
+<script type="module" src="/js/custom/script_3.js"></script>
+
+</html>

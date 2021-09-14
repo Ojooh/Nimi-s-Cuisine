@@ -1,8 +1,6 @@
 
-
-
-
 var nameRegex = /^[A-Za-z.\s_-]*$/;
+var nameyRegex = /^[A-Za-z0-9.\s_-]*$/;
 var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 var telRegex = /^[\s()+-]*([0-9][\s()+-]*){6,20}$/;
 var passRegex = /^([a-z0-9]).{6,}$/;
@@ -52,6 +50,28 @@ module.exports.array_unique = (inputArr) => {
     return tmpArr2
 };
 
+module.exports.getRank = async () => {
+    var letters = ["A", "B", "C", "D", "E"];
+    let param1 = ["*"];
+    let param2 = "sliders";
+    let param3 = "";
+    let param4 = " ORDER BY rank DESC LIMIT 1";
+
+    var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+    var slds = await DB.runSQLQuery(sql);
+    if (slds && slds.length > 0) {
+        let indx = letters.indexOf(slds[0].rank.trim());
+
+        if (indx <= letters.length) {
+            return letters[indx + 1];
+        } else {
+            return "";
+        }
+    } else {
+        return "";
+    }
+};
+
 
 
 
@@ -67,6 +87,12 @@ module.exports.isEmpty = (input) => {
 //Is Name Input Valid
 module.exports.validateName = (name) => {
     var bul = nameRegex.test(name);
+    return bul;
+};
+
+//Is Name Input Valid with number
+module.exports.validateNamey = (name) => {
+    var bul = nameyRegex.test(name);
     return bul;
 };
 
@@ -107,7 +133,11 @@ module.exports.validateAge = (dob) => {
 
 //Is Email Input Exist
 module.exports.emailExist = async (email) => {
-    var user_e = await DB.getUserByEmail(email)
+    let param1 = ["*"];
+    let param2 = "users";
+    let param3 = { "email": email };
+    var sql = DB.generateSelectSQL(param1, param2, param3);
+    var user_e = await DB.runSQLQuery(sql);
     // console.log("helpey");
     // console.log(user_e)
     if (user_e.length > 0) {
@@ -120,20 +150,22 @@ module.exports.emailExist = async (email) => {
 
 };
 
-//Is Kid Email Input Exist
-module.exports.kidIsEmailExist = async (email) => {
-    var kid = await DB.getKidByEmail(email)
-    // console.log("helpey");
-    // console.log(user_e)
-    if (kid.length > 0) {
-        // console.log("helper" + true);
-        return true
+module.exports.uniqueRank = async (rank) => {
+    let param1 = ["*"];
+    let param2 = "sliders";
+    let param3 = { "rank": rank };
+    var sql = DB.generateSelectSQL(param1, param2, param3);
+    var rank_e = await DB.runSQLQuery(sql);
+
+    if (rank_e.length > 0) {
+        return true;
     } else {
-        // console.log("helper" + false);
-        return false
+        return false;
     }
 
-};
+}
+
+
 
 //Genearte User ID
 module.exports.generateUserId = async (title, width) => {
@@ -173,7 +205,7 @@ module.exports.generateUserType = (title) => {
 
 //Is Image
 module.exports.isImage = (file) => {
-    if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
+    if (file.mimetype == "image/jpeg" || file.mimetype == "image/png" || file.type == "image/webp") {
         return true;
     } else {
         return false;
@@ -188,6 +220,8 @@ module.exports.isDoc = (file) => {
         return false;
     }
 };
+
+
 
 //function to split Array
 module.exports.splitArray = (arr, n) => {

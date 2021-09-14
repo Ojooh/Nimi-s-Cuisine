@@ -122,7 +122,7 @@ const generateUserType = (title) => {
 //Is Image
 const isImage = (file) => {
     // console.log(file.mimetype)
-    if (file.type == "image/jpeg" || file.type == "image/png") {
+    if (file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/webp") {
         return true;
     } else {
         return false;

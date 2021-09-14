@@ -2,12 +2,13 @@ const DB = require('./db_controller');
 const bcrypt = require('bcrypt');
 const moment = require('moment');
 var vd = require("./validate");
+var hp = require("./helper");
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
-const img_path = { "events": "public/images/event_files/", "cats": "public/images/cat_files/", "user": "public/images/user_files/", "slider": "public/images/slider/" };
-const saltRounds = 10;
-const sidebar = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" }
+// const img_path = { "events": "public/images/event_files/", "cats": "public/images/cat_files/", "user": "public/images/user_files/", "slider": "public/images/slider/" };
+// const saltRounds = 10;
+
 
 
 //Function To Render Dashboard
@@ -126,7 +127,7 @@ module.exports.getNavLinks = async (req, res, next) => {
             var Links = await DB.runSQLQuery(sql);
             param1 = ["*"];
             param2 = "activities";
-            param3 = { "is_active": '1' };
+            param3 = { "is_active": '1&', "category": "nav_link" };
             let param4 = "ORDER BY date_created DESC LIMIT 10";
             var sql = DB.generateSelectSQL(param1, param2, param3, param4);
             console.log(sql);
@@ -145,7 +146,7 @@ module.exports.getNavLinks = async (req, res, next) => {
     }
 };
 
-//Function To Render NavLinks Page
+//Function To Create New Navlink Profile
 module.exports.createNavLinks = async (req, res, next) => {
     console.log(req.session.loggedin)
     if (req.session.username && req.session.loggedin) {
@@ -162,14 +163,14 @@ module.exports.createNavLinks = async (req, res, next) => {
             if (state) {
                 var email = req.session.username;
                 let param1 = "nav_links";
-                let param2 = { "name": req.body.name, "link": blah, "created_by": User[0].user_id, "is_active": '1' };
+                let param2 = { "name": req.body.name, "link": blah, "created_by": User[0].user_id, "category": "nav_link", "is_active": '1' };
                 let param3 = param2;
                 var sql = DB.generateInsertSQL(param1, param2, param3);
                 console.log(sql)
                 await DB.runSQLQuery(sql);
                 let subj = "Created " + req.body.name + " Nav Link";
                 param1 = "activities";
-                param2 = { "activity_type": "website_update", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param2 = { "activity_type": "website_update", "title": subj, "category": "nav_link", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
                 param3 = param2;
                 var sql = DB.generateInsertSQL(param1, param2, param3);
                 console.log(sql)
@@ -242,7 +243,7 @@ module.exports.updateNavLinkStatus = async (req, res, next) => {
     }
 };
 
-//Function To Render NavLinks Page
+//Function To Edit NavLink Profile
 module.exports.updateNavLinkProfile = async (req, res, next) => {
     console.log(req.session.loggedin)
     if (req.session.username && req.session.loggedin) {
@@ -288,6 +289,7 @@ module.exports.updateNavLinkProfile = async (req, res, next) => {
     }
 };
 
+// Function to create sub NavLinks
 module.exports.createSubNavLink = async (req, res, next) => {
     console.log(req.session.loggedin)
     if (req.session.username && req.session.loggedin) {
@@ -332,7 +334,7 @@ module.exports.createSubNavLink = async (req, res, next) => {
     }
 };
 
-
+// Function to destroy NavLinks
 module.exports.destroyNavLink = async (req, res, next) => {
     console.log(req.session.loggedin)
     if (req.session.username && req.session.loggedin) {
@@ -369,6 +371,255 @@ module.exports.destroyNavLink = async (req, res, next) => {
                 res.json(data)
             } else {
                 data.error = "Something Went Wrong, Please Try Again";
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Render NavLinks Page
+module.exports.getSliders = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var icon = "fas fa-sliders-h";
+            var title = "Slider"
+            var rank = await hp.getRank();
+            console.log(rank);
+            let param1 = ["*"];
+            let param2 = "sliders";
+            let param3 = "";
+            let param4 = " ORDER BY rank ASC";
+
+            var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+            console.log(sql)
+            var Sliders = await DB.runSQLQuery(sql);
+
+            param1 = ["*"];
+            param2 = "texts";
+            param3 = { "category": "slider" };
+
+            var sql = DB.generateSelectSQL(param1, param2, param3);
+            console.log(sql)
+            var Texts = await DB.runSQLQuery(sql);
+
+
+            param1 = ["*"];
+            param2 = "activities";
+            param3 = { "is_active": '1&', "category": "slider" };
+            param4 = "ORDER BY date_created DESC LIMIT 10";
+
+            var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+            console.log(sql);
+            var activities = await DB.runSQLQuery(sql);
+
+            const sidebar = { dash: "", web: "active", prd: "", ords: "", pays: "", usrs: "" }
+            sidebar.slider = "active";
+            let context = { rank: rank, sliders: Sliders, texts: Texts, acts: activities, user: User[0], sidebar: sidebar, icon: icon, title: title };
+            res.render('admin/slider', context);
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Create New Navlink Profile
+module.exports.createSlider = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = vd.validSlider(req);
+
+            if (state) {
+                let img = req.files.img;
+                let [name, ext] = img.name.split(".");
+                let new_name = uuidv4() + "." + ext;
+                let dir = "public/img/slider/" + new_name;
+                let db_path = "/img/slider/" + new_name;
+
+                let param1 = "sliders";
+                let param2 = { "slider": req.body.name, "rank": req.body.rank, "img": db_path, };
+                let param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                console.log(sql)
+                await DB.runSQLQuery(sql);
+                img.mv(dir);
+
+                let subj = "Created " + req.body.name + " Slider";
+                param1 = "activities";
+                param2 = { "activity_type": "website_update", "title": subj, "category": "slider", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                console.log(sql)
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+// Function to destroy Slider
+module.exports.destroySlider = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var id = req.body.ID;
+            var name = req.body.name;
+            let subj = ""
+
+            if (name && id) {
+                let one = ["img"];
+                let two = "sliders";
+                let three = { "id": id };
+                var sql = DB.generateSelectSQL(one, two, three);
+                var sld = await DB.runSQLQuery(sql);
+
+                let param1 = "sliders";
+                let param2 = { "id": id };
+                var sql = DB.generateDeleteSQL(param1, param2);
+                console.log(sql)
+                await DB.runSQLQuery(sql);
+
+                let url = path.join(__dirname, '../', 'public') + sld[0].img
+                fs.unlink(url, function (err) {
+                    if (err) throw err;
+                    // if no error, file has been deleted successfully
+                    console.log('File deleted!');
+                });
+
+                subj = "Updated " + name + " Slider Profile, Profile Destroyed";
+                param1 = "activities";
+                param2 = { "activity_type": "website_update", "title": subj, "category": "slider", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                console.log(sql)
+                await DB.runSQLQuery(sql);
+
+                data.success = subj;
+                res.json(data)
+            } else {
+                data.error = "Something Went Wrong, Please Try Again";
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Create New Navlink Profile
+module.exports.updateSlider = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = vd.validSlider(req);
+            var id = req.body.ID;
+
+            if (state) {
+
+                let one = ["img"];
+                let two = "sliders";
+                let three = { "id": id };
+                var sql = DB.generateSelectSQL(one, two, three);
+                var sld = await DB.runSQLQuery(sql);
+                let db_path = '';
+                let dir = '';
+                let img = '';
+
+                if (req.files) {
+                    let url = path.join(__dirname, '../', 'public') + sld[0].img
+                    fs.unlink(url, function (err) {
+                        if (err) throw err;
+                        // if no error, file has been deleted successfully
+                        console.log('File deleted!');
+                    });
+
+                    img = req.files.img;
+                    let [name, ext] = img.name.split(".");
+                    let new_name = uuidv4() + "." + ext;
+                    dir = "public/img/slider/" + new_name;
+                    db_path = "/img/slider/" + new_name;
+                }
+                else {
+
+                    db_path = sld[0].img;
+                }
+
+                let param1 = "sliders";
+                let param2 = { "slider": req.body.name, "img": db_path, };
+                let param3 = { "id": id };
+                var sql = DB.generateUpdateSQL(param1, param2, param3);
+                console.log(sql)
+                await DB.runSQLQuery(sql);
+                if (req.files) {
+                    img.mv(dir);
+                }
+
+                let subj = "Updated " + req.body.name + " Slider Profile, Profile Edited";
+                param1 = "activities";
+                param2 = { "activity_type": "website_update", "title": subj, "category": "slider", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                console.log(sql)
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
                 res.json(data)
             }
         }

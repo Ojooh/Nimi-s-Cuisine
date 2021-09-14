@@ -1,0 +1,35 @@
+<div class="col-md-4 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title text-center">Activities</h4>
+        </div>
+        <div class="card-body">
+            <% if (acts && acts.length> 0) { %>
+                <div class="row user-activity-card mb-2">
+                    <% for (var l=0; l < acts.length; l++) { %>
+                        <div class="col-12">
+                            <h6 class="mb-0">
+                                <%= acts[l].activity_by %>
+                            </h6>
+                            <p class="text-muted mb-0">
+                                <%= acts[l].title %>.
+                            </p>
+                            <p class="text-muted pretty-timer mb-0">
+                                <i class="far fa-clock"></i>
+                                <span class="pretty-timers">
+                                    <%= acts[l].date_created %>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="line"></div>
+                        <% } %>
+                </div>
+                <% } else { %>
+                    <div class="text-danger text-center alert alert-success w-100">
+                        No Activities Available
+                    </div>
+                    <% } %>
+
+        </div>
+    </div>
+</div>
