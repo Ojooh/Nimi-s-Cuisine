@@ -1,0 +1,55 @@
+<!-- Slider start -->
+<div class="untree_co-hero overlay">
+    <%if (slds && slds.length> 0) { %>
+        <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <% for (var s=0; s < slds.length; s++) { %>
+
+                    <div class="carousel-item <%= ((slds[s].rank == 'A') ? 'active' : '') %>">
+                        <img src="<%= slds[s].img %>" class="d-block w-100" alt="<%= slds[s].slide %>">
+                    </div>
+
+                    <% } %>
+            </div>
+        </div>
+        <% } %>
+
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-12">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 text-center">
+
+                            <span class="caption" data-aos="fade-up" data-aos-delay="0">
+                                <%= txt[0].caption %>
+                            </span>
+                            <h1 class="mb-4 heading text-white" data-aos="fade-up" data-aos-delay="100">
+                                <%= txt[0].heading %>
+                            </h1>
+                            <div class="mb-4 text-white desc" data-aos="fade-up" data-aos-delay="200">
+                                <p>
+                                    <%= txt[0].desc %>
+                                </p>
+                            </div>
+                            <p class="mb-0" data-aos="fade-up" data-aos-delay="300"><a href="#"
+                                    class="btn btn-primary">Explore now</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div data-aos="fade-up" data-aos-delay="0" class="scroll-down-wrap">
+            <span class="scroll-down"><span>scroll down</span></span>
+        </div>
+        
+        <ul class="list-unstyled social-hero-section mb-0">
+            <li data-aos="fade-left" data-aos-delay="0"><a href="#"><i class="fab fa-whatsapp"></i></a></li>
+            <li data-aos="fade-left" data-aos-delay="100"><a href="#"><i class="fab fa-instagram"></i></a></li>
+            <li data-aos="fade-left" data-aos-delay="200"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+            <li data-aos="fade-left" data-aos-delay="300"><a href="#"><i class="fab fa-twitter"></i></a></li>
+        </ul>
+</div>
+<!-- Slider End -->

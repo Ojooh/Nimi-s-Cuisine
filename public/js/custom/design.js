@@ -3,6 +3,7 @@ $(document).ready(function () {
     var sidebarToggleBtn = $('#sidebarCollapse');
     var prettyTimer = $('.pretty-timers');
     var caret = $('.caret');
+    var nav = $('.site-nav');
 
     function timeSince(d) {
         var now = moment(new Date())
@@ -45,6 +46,26 @@ $(document).ready(function () {
         console.log(r);
         $(prettyTimer[n]).html(r);
     }
+
+    if ($(document).scrollTop() > 35) {
+        nav.addClass('over');
+    } else if ($(document).scrollTop() == 0) {
+        nav.removeClass('over');
+    } else {
+        nav.removeClass('over');
+    }
+
+    //Function to handle document on scroll event
+    $(document).scroll(function (event) {
+        var st = $(this).scrollTop();
+        if (st > 35) {
+            nav.addClass('over');
+        } else if (st == 0) {
+            nav.removeClass('over');
+        } else {
+            nav.removeClass('over');
+        }
+    });
 
 
     // sideBar.mCustomScrollbar({

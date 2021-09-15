@@ -1,6 +1,33 @@
 // const User = require('./db_controller');
 var helper = require("./helper");
 
+module.exports.validText = (req,) => {
+    let obj = req.body
+    console.log(obj)
+    let txt = [];
+    let s = {};
+
+    Object.keys(obj).forEach(function (key) {
+        let j = obj[key];
+
+
+        if (helper.isEmpty(j) || (helper.validateNamey(j) == false)) {
+            return [null, false, { message: 'Slider ' + key + ' Text Not Valid' }];
+        } else {
+            s[key] = j;
+
+        }
+
+    });
+
+    txt.push(s);
+
+
+    return [txt, true, { message: ' Slider Landing Text Profile Worked on successfully' }];
+
+
+};
+
 module.exports.validSlider = (req,) => {
 
     if (helper.isEmpty(req.body.name) || (helper.validateNamey(req.body.name) == false)) {

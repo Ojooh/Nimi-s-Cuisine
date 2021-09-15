@@ -1,6 +1,6 @@
 
-var nameRegex = /^[A-Za-z.\s_-]*$/;
-var nameyRegex = /^[A-Za-z0-9.\s_-]*$/;
+var nameRegex = /^[A-Za-z.\s,_-]*$/;
+var nameyRegex = /^[A-Za-z0-9.\s,_-]*$/;
 var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 var usernameRegex = /^[a-zA-Z]+\-[0-9]{2,}$/i;
 var telRegex = /^[\s()+-]*([0-9][\s()+-]*){6,20}$/;

@@ -3,7 +3,7 @@ import { swalShowError, swalShowLoading, validateNamey, isImage } from './helper
 
 jQuery(document).ready(function ($) {
     var addSlider = $(".add-slider");
-
+    var landingText = $('#landingText');
     var errorClass = "swal2-validation-message";
     var edit = $(".edit");
     var remove = $(".remove");
@@ -272,5 +272,117 @@ jQuery(document).ready(function ($) {
 
     });
 
+    landingText.on("click", async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let caption, heading, desc = "";
+        var subj = "Creating Landing Text"
+
+        var txt = JSON.parse($(this).attr("data-caption"));
+        console.log(txt)
+        if (txt && txt != "" && txt.length > 0) {
+            for (var c = 0; c < txt.length; c++) {
+                caption = txt[c].caption;
+                heading = txt[c].heading;
+                desc = txt[c].desc;
+            }
+            subj = "Updating Landing Text"
+        }
+
+
+        Swal.fire({
+            title: 'Enter Slider Caption Text',
+            input: 'text',
+            inputValue: caption,
+            showLoaderOnConfirm: true,
+            preConfirm: (caption) => {
+
+                var state = validateNamey(caption);
+                if (!state || caption == "") {
+                    swalShowError("Capion is Not valid", errorClass);
+                } else {
+                    return caption;
+                }
+            },
+        }).then(function (result) {
+            caption = result.value;
+
+            if (caption && caption != "") {
+                Swal.fire({
+                    title: 'Enter Slider Heading',
+                    input: 'text',
+                    inputValue: heading,
+                    showLoaderOnConfirm: true,
+                    preConfirm: (title) => {
+
+                        var state = validateNamey(title);
+                        if (!state || title == "") {
+                            swalShowError("Heading is Not valid", errorClass);
+                        } else {
+                            return title;
+                        }
+                    },
+                }).then(function (result) {
+                    heading = result.value;
+
+                    if (heading && heading != "") {
+                        Swal.fire({
+                            title: 'Enter Slider Description',
+                            input: 'textarea',
+                            inputValue: desc,
+                            showLoaderOnConfirm: true,
+                            preConfirm: (desc) => {
+
+                                var state = validateNamey(desc);
+                                if (!state || desc == "") {
+                                    swalShowError("Description is Not valid", errorClass);
+                                } else {
+                                    return desc;
+                                }
+                            },
+                        }).then(function (result) {
+                            desc = result.value;
+                            if (desc && desc != "") {
+                                let data = { 'caption': caption, 'heading': heading, 'desc': desc, 'subj': subj };
+                                let url = "/admin/slider/landing_text";
+
+                                $.ajax({
+                                    url: url,
+                                    data: data,
+                                    type: "post",
+                                    beforeSend: function () {
+                                        swalShowLoading(subj, "Please wait, while Landing text is worked on")
+                                    },
+                                    success: function (data) {
+                                        if (data.success) {
+
+                                            Swal.fire(data.success, "Click OK to proceed", "success").then(
+                                                function () {
+                                                    location.reload();
+                                                }
+                                            )
+                                        }
+                                        else {
+                                            swal.close();
+                                            Swal.fire(data.error, "Click OK to proceed", "error").then(
+                                                function () {
+                                                    location.reload();
+                                                }
+                                            )
+                                        }
+
+                                    }
+                                });
+                            }
+
+                        });
+                    }
+
+                });
+            }
+
+        });
+
+    });
 
 });

@@ -30,6 +30,9 @@ router.get('/slider', adminHandler.getSliders);
 /* POST New NavBar Link Profile. */
 router.post('/slider', adminHandler.createSlider);
 
+/* POST Landing Text Profile. */
+router.post('/slider/landing_text', adminHandler.landingText);
+
 /* POST NavBar Link Profile Edit. */
 router.post('/slider/edit', adminHandler.updateSlider);
 

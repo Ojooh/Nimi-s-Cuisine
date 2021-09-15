@@ -21,15 +21,14 @@
     }
 } */
 
-
 body::-webkit-scrollbar {
   width: 5px;
 }
- 
+
 body::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
- 
+
 body::-webkit-scrollbar-thumb {
   background-color: darkgrey;
   outline: 1px solid slategrey;
@@ -102,6 +101,7 @@ body {
   color: #212529;
   text-align: left;
   background-color: #fff;
+  overflow-x: hidden;
 }
 
 [tabindex='-1']:focus:not(:focus-visible) {
@@ -754,7 +754,7 @@ textarea.form-control {
   margin-top: 0.25rem;
 }
 
-.btn {
+{
   display: inline-block;
   font-weight: 400;
   color: #212529;
@@ -774,7 +774,7 @@ textarea.form-control {
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media.btn  (prefers-reduced-motion: reduce) {
   .btn {
     transition: none;
   }
@@ -12438,9 +12438,13 @@ h4,
 }
 
 .site-nav {
-  position: absolute;
+  position: fixed;
   width: 100%;
   z-index: 9;
+}
+
+.site-nav.over {
+  background: #fff;
 }
 
 .site-nav a {
@@ -12477,12 +12481,24 @@ h4,
   position: relative;
 }
 
+.site-nav.over .site-navigation .site-menu > li > a {
+  color: #000;
+}
+
 .site-nav .site-navigation .site-menu > li > a:hover {
   color: #fff;
 }
 
+.site-nav.over .site-navigation .site-menu > li > a:hover {
+  color: #ff5200;
+}
+
 .site-nav .site-navigation .site-menu > li.active > a {
   color: #fff;
+}
+
+.site-nav.over .site-navigation .site-menu > li.active > a {
+  color: #ff5200 !important;
 }
 
 .site-nav .site-navigation .site-menu .has-children {
@@ -12954,7 +12970,20 @@ h4,
   outline: none;
 }
 
+.w-100 {
+  width: 100% !important;
+}
+
 .untree_co-hero {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+}
+
+.untree_co-hero .carousel-item img {
+  height: 100vh;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
