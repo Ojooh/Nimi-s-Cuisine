@@ -28,7 +28,7 @@ module.exports.getHomePage = async (req, res, next) => {
     var Texts = await DB.runSQLQuery(sql);
     Txt = ((Texts && Texts.length > 0) ? JSON.parse(Texts[0].texts) : '');
 
-    var context = { txt: Txt, lnks: Links, slds: Sliders };
+    var context = { txt: Txt, lnks: Links, slds: Sliders, actv: 'Home' };
     res.render('nimi/index', context);
 };
 

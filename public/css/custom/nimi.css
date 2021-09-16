@@ -9,6 +9,16 @@
   display: none !important;
 }
 
+.right-40 {
+  right: 149px !important;
+}
+
+@media (max-width: 992px) {
+  .right-40 {
+    display: none;
+  }
+}
+
 html {
   font-family: sans-serif;
   line-height: 1.15;
@@ -51,6 +61,18 @@ a {
 a:hover {
   color: #ff5200;
   text-decoration: none;
+}
+
+.text-primary {
+  color: #ff5200 !important;
+}
+
+a.text-primary {
+  color: #ff5200 !important;
+}
+
+a.text-primary:hover {
+  color: #ff5200 !important;
 }
 
 .site-nav {
@@ -774,7 +796,7 @@ a:hover {
   left: 50%;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
-  bottom: 140px;
+  bottom: 20px;
   color: #fff;
   text-align: center;
   display: block;
@@ -826,5 +848,115 @@ a:hover {
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+.bg-1 {
+  background-color: #fee2b3;
+}
+
+.list-unstyled {
+  padding-left: 0;
+  list-style: none;
+}
+
+.subtitle {
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.1rem;
+}
+
+.untree_co-section {
+  padding: 100px 0;
+  position: relative;
+}
+
+@media (max-width: 991.98px) {
+  .untree_co-section {
+    padding: 50px 0;
+  }
+  .untree_co-section .heading {
+    font-size: 20px;
+  }
+}
+
+.untree_co-section .heading h3 {
+  font-size: 35px;
+  color: #000;
+}
+
+.untree_co-section .heading strong {
+  font-weight: 700;
+}
+
+.untree_co-tab-nav li {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.untree_co-tab-nav li img {
+  width: 25px;
+  margin-right: 20px;
+}
+
+.untree_co-tab-nav li a {
+  font-size: 20px;
+  display: block;
+  margin-bottom: 10px;
+  padding: 15px 20px;
+  text-align: center;
+  border-radius: 30px;
+  color: #000;
+}
+
+.untree_co-tab-nav li.active {
+  position: relative;
+  z-index: 2;
+}
+
+.untree_co-tab-nav li.active a {
+  color: #ff5200;
+  background: #fff;
+  -webkit-box-shadow: 0 15px 30px 0 #ebca92;
+  box-shadow: 0 15px 30px 0 #ebca92;
+}
+
+.product .thumbnail {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  border-radius: 7px;
+  margin-bottom: 20px;
+  width: 350px;
+  height: 200px;
+}
+
+.product .thumbnail img {
+  width: 350px !important;
+  height: 200px !important;
+  margin-bottom: 0;
+  -webkit-transition: 0.3s all ease;
+  transition: 0.3s all ease;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+
+.product .thumbnail:hover img {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.product h3 {
+  font-size: 18px;
+}
+
+.product h3 a {
+  color: #000;
+}
+
+.product .price {
+  color: #ff5200;
 }
 /*# sourceMappingURL=nimi.css.map */

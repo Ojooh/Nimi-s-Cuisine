@@ -72,9 +72,6 @@ module.exports.getRank = async () => {
     }
 };
 
-
-
-
 //Is Any Input Empty
 module.exports.isEmpty = (input) => {
     if (input == "") {
@@ -167,6 +164,8 @@ module.exports.uniqueRank = async (rank) => {
 
 
 
+
+
 //Genearte User ID
 module.exports.generateUserId = async (title, width) => {
     if (title == 'KDS') {
@@ -220,7 +219,6 @@ module.exports.isDoc = (file) => {
         return false;
     }
 };
-
 
 
 //function to split Array
@@ -286,4 +284,12 @@ module.exports.formatDateR = (date) => {
     return yy + "/" + mm + "/" + dd + " " + HH + ":" + MM + ":" + SS;
 };
 
+
+module.exports.isUrlValid = (userInput) => {
+    var res = userInput.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    if (res == null)
+        return false;
+    else
+        return true;
+}
 

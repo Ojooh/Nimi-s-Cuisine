@@ -1,0 +1,96 @@
+<% include includes/head %>
+
+    <body>
+
+        <div class="wrapper">
+            <!-- Sidebar  -->
+            <% include includes/sidebar %>
+            <!-- Sidebar End -->
+
+            <!-- Top Bar -->
+            <% include includes/topbar %>
+            <!-- Top Bar End -->
+
+            <!-- Page Content  -->
+            <div id="content">
+                <div class="container-fluid">
+                    <!-- Page Title Row -->
+                    <% include includes/pageTitle %>
+                    <!-- Page Title Row End -->
+
+                    <!-- Add Button Modal-->
+                    <div class="row">
+                        <div class="col-12">
+                            <div id="socLinkAdd" class="float-left my-4">
+                                <a href="#" class="btn btn-outline-nm">
+                                    <i class="fas fa-plus"></i>
+                                    Create A New Social Link
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Add Button Modal-->
+
+                    <!-- Page Content Row -->
+                    <div class="row">
+                        <div class="col-md-8 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title text-center">Social Links</h4>
+                                </div>
+                                <div class="card-body">
+                                    <% if (links && links.length> 0) { %>
+                        
+                                        <div class="list-wrapper pt-2">
+                                            <ul class="todo-list todo-list-custom">
+                                                <% for (var l=0; l < links.length; l++) { %>
+                                                        <li>
+                                                            <div class="text-left float-left">
+                                                                <i class=""></i>
+                                                            </div>
+                                                            <div class="icons-right float-left">
+                                                                <i class="edit far fa-edit" data-id="<%= links[l].id %>"
+                                                                    data-name="<%= links[l].name %>"></i>
+                                                                <i class="plus fas fa-plus" data-id="<%= links[l].id %>"
+                                                                    data-name="<%= links[l].name %>"></i>
+                                                                <i class="remove fas fa-times" data-id="<%= links[l].id %>"
+                                                                    data-name="<%= links[l].name %>"></i>
+                                                                <i class="caret fas fa-angle-down" data-id="<%= links[l].id %>"></i>
+                                                            </div>
+                        
+                                                        </li>
+                        
+                                                <% } %>
+                                            </ul>
+                                        </div>
+
+                                    <% } else { %>
+                                        <div class="text-danger text-center alert alert-success d-flex w-100">
+                                            No Links Available
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <% include includes/activities %>
+                    </div>
+                    <!-- Page Content Row -->
+                    
+                    
+                </div>
+                    
+            </div>
+        </div>
+                    
+    </body>
+                    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+    integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/js/custom/design.js"></script>
+<script type="module" src="/js/custom/validator.js"></script>
+<script type="module" src="/js/custom/helper.js"></script>
+<script type="module" src="/js/custom/script_4.js"></script>
+
+</html>

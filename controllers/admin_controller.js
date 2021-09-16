@@ -707,3 +707,91 @@ module.exports.landingText = async (req, res, next) => {
     }
 };
 
+//Function To Render NavLinks Page
+module.exports.getSocialLinks = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var icon = "fas fa-share-alt";
+            var title = "Social Links"
+
+            let param1 = ["*"];
+            let param2 = "social_links";
+            let param3 = "";
+            var sql = DB.generateSelectSQL(param1, param2, param3);
+            console.log(sql)
+            var Links = await DB.runSQLQuery(sql);
+
+            param1 = ["*"];
+            param2 = "activities";
+            param3 = { "is_active": '1&', "category": "soc_link" };
+            let param4 = "ORDER BY date_created DESC LIMIT 10";
+            var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+            var activities = await DB.runSQLQuery(sql);
+
+            const sidebar = { dash: "", web: "active", prd: "", ords: "", pays: "", usrs: "" }
+            sidebar.soc_link = "active";
+            let context = { links: Links, acts: activities, user: User[0], sidebar: sidebar, icon: icon, title: title };
+            res.render('admin/socialLinks', context);
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Create New Navlink Profile
+module.exports.createSocialLink = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = vd.validSocials(req);
+
+            if (state) {
+                var email = req.session.username;
+                let param1 = "social_links";
+                let param2 = { "name": req.body.name, "link": req.body.link, "class": blah, "is_active": '1' };
+                let param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                let subj = "Created " + req.body.name + " Social Link";
+                param1 = "activities";
+                param2 = { "activity_type": "website_update", "title": subj, "category": "soc_link", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+

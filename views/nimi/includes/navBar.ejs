@@ -20,7 +20,7 @@
             <ul class="js-clone-nav d-none d-lg-inline-block site-menu">
             <% for (var l=0; l < lnks.length; l++) { var par = lnks[l].id %>
                 <% if (lnks[l].parent==0) { %>
-                <li class="<%= (( lnks[l].children == '1') ? 'has-children' : '') %>">
+                <li class="<%= (( lnks[l].name == actv) ? 'active' : actv) %> <%= (( lnks[l].children == '1') ? 'has-children' : '') %>">
                     <a href="index.html">
                        <%= lnks[l].name %>
 
@@ -42,7 +42,12 @@
             <% } %>
                 
             </ul>
-            <a href="book-a-table.html" class="btn-book btn btn-primary btn-sm menu-absolute">Book a meal</a>
+            <a href="book-a-table.html" class="btn-book btn btn-primary btn-sm menu-absolute right-40">
+                <i class="fas fa-shopping-cart"></i>
+            </a>
+            <a href="book-a-table.html" class="btn-book btn btn-primary btn-sm menu-absolute">
+                Book a meal
+            </a>
             <a href="#"
                 class="burger ml-auto float-right site-menu-toggle js-menu-toggle d-inline-block d-lg-none light"
                 data-toggle="collapse" data-target="#main-navbar">

@@ -563,13 +563,17 @@ a:hover {
   padding: 30px 20px;
   border: 1px dashed #4d64be;
   background: transparent;
-  width: 200px;
+  width: 100%;
   border-radius: 20px;
   color: #4d64be;
   text-align: center;
   font-size: 18px;
   font-weight: 600;
   height: 200px;
+}
+
+.wrapper #content .add-slider.wii {
+  width: 200px !important;
 }
 
 .wrapper #content .add-slider span {

@@ -71,6 +71,15 @@ const validateAge = (dob) => {
     }
 };
 
+const isUrlValid = (userInput) => {
+    var res = userInput.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    if (res == null)
+        return false;
+    else
+        return true;
+}
+
+
 //  Is FB link Input Valid
 const validFBLink = (link) => {
     var pattern = /^(?:(?:http|https):\/\/)?(?:www.)?facebook.com\(?:(?:\w)*#!\)(?:profile.php\?id=(?=\d.*))?([\w-]*)?$/;
@@ -266,7 +275,7 @@ const swalShowLoading = (title, msg, timer = 40000) => {
 
 export {
     showError, isEmpty, validFutureDate, validateName, validateNamey, validateEmail, validateUsername, validateTel,
-    validatePass, validateAge, validFBLink, validIGLink, validtwitterLink, generateUserType, isImage,
+    validatePass, validateAge, isUrlValid, validFBLink, validIGLink, validtwitterLink, generateUserType, isImage,
     isDoc, splitArray, paginateArray, validGreaterDate, validYTLink, swalShowError, swalShowLoading
 }
 

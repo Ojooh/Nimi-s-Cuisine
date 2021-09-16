@@ -1,4 +1,3 @@
-import { validateNavName } from './validator.js';
 import { swalShowError, swalShowLoading, validateNamey, isImage } from './helper.js';
 
 jQuery(document).ready(function ($) {

@@ -1,6 +1,22 @@
 // const User = require('./db_controller');
 var helper = require("./helper");
 
+module.exports.validSocials = (req,) => {
+
+    if (helper.isEmpty(req.body.name) || (helper.validateName(req.body.name) == false)) {
+        return [null, false, { message: 'Social Link Name Input is not Valid' }];
+    }
+    else if (helper.isEmpty(req.body.link) || (helper.isUrlValid(req.body.link) == false)) {
+        return [null, false, { message: 'Social Link Address Input is not Valid' }];
+    }
+    else {
+        var slug = "fab fa-" + req.body.name.toLowerCase();
+        return [slug, true, { message: req.body.name + ' Social Link Profile Created successfully' }];
+    }
+
+
+};
+
 module.exports.validText = (req,) => {
     let obj = req.body
     console.log(obj)
@@ -10,22 +26,16 @@ module.exports.validText = (req,) => {
     Object.keys(obj).forEach(function (key) {
         let j = obj[key];
 
-
         if (helper.isEmpty(j) || (helper.validateNamey(j) == false)) {
             return [null, false, { message: 'Slider ' + key + ' Text Not Valid' }];
         } else {
             s[key] = j;
 
         }
-
     });
 
     txt.push(s);
-
-
     return [txt, true, { message: ' Slider Landing Text Profile Worked on successfully' }];
-
-
 };
 
 module.exports.validSlider = (req,) => {

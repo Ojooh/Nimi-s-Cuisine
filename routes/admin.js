@@ -39,6 +39,18 @@ router.post('/slider/edit', adminHandler.updateSlider);
 /* POST Destroy Slider Profile. */
 router.post('/slider/delete', adminHandler.destroySlider);
 
+/* GET Social Links page. */
+router.get('/social_links', adminHandler.getSocialLinks);
+
+/* POST New Social Link Profile. */
+router.post('/social_links', adminHandler.createSocialLink);
+
+// /* POST Social Link Profile Edit. */
+// router.post('/social_links/edit', adminHandler.updateSocialLink);
+
+// /* POST delete Social Link Profile. */
+// router.post('/social_links/delete', adminHandler.destroySocialLink);
+
 
 
 
