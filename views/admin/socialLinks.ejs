@@ -45,17 +45,15 @@
                                             <ul class="todo-list todo-list-custom">
                                                 <% for (var l=0; l < links.length; l++) { %>
                                                         <li>
-                                                            <div class="text-left float-left">
-                                                                <i class=""></i>
+                                                            <div class="social text-left float-left">
+                                                                <i class="<%= links[l].class %>"></i>
+                                                                <%= links[l].name %>
                                                             </div>
                                                             <div class="icons-right float-left">
                                                                 <i class="edit far fa-edit" data-id="<%= links[l].id %>"
-                                                                    data-name="<%= links[l].name %>"></i>
-                                                                <i class="plus fas fa-plus" data-id="<%= links[l].id %>"
-                                                                    data-name="<%= links[l].name %>"></i>
+                                                                    data-name="<%= links[l].name %>" data-link="<%= links[l].link %>"></i>
                                                                 <i class="remove fas fa-times" data-id="<%= links[l].id %>"
                                                                     data-name="<%= links[l].name %>"></i>
-                                                                <i class="caret fas fa-angle-down" data-id="<%= links[l].id %>"></i>
                                                             </div>
                         
                                                         </li>

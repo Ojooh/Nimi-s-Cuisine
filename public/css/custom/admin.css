@@ -601,6 +601,10 @@ a:hover {
   color: #263366;
 }
 
+.wrapper #content .social {
+  font-size: 20px;
+}
+
 @media (max-width: 768px) {
   .wrapper #content {
     width: 100%;
@@ -615,5 +619,20 @@ a:hover {
   .wrapper #content #sidebarCollapse span {
     display: none;
   }
+}
+
+.wrapper .modal .modal-content {
+  border-radius: 10%;
+  position: relative;
+}
+
+.wrapper .modal .modal-content .avatar {
+  width: 100px;
+  height: 100px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  top: -50px;
+  left: calc(50% - 50px);
 }
 /*# sourceMappingURL=admin.css.map */

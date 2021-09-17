@@ -1,0 +1,92 @@
+<% include includes/head %>
+
+    <body>
+
+        <div class="wrapper">
+            <!-- Sidebar  -->
+            <% include includes/sidebar %>
+            <!-- Sidebar End -->
+
+            <!-- Top Bar -->
+            <% include includes/topbar %>
+            <!-- Top Bar End -->
+
+            <!-- Page Content  -->
+            <div id="content">
+                <div class="container-fluid">
+                    <!-- Page Title Row -->
+                    <% include includes/pageTitle %>
+                    <!-- Page Title Row End -->
+
+                    <!-- Add Button Modal-->
+                    <div class="row">
+                        <div class="col-12">
+                            <div id="testyMdl" class="float-left my-4">
+                                <a href="#" class="btn btn-outline-nm">
+                                    <i class="fas fa-plus"></i>
+                                    Create New Testimonial
+                                </a>
+                            </div>
+
+                            <div id="testyShare" class="float-right my-4">
+                                <a href="#" class="btn btn-outline-nm">
+                                    <i class="fas fa-link"></i>
+                                    Get Testimonial Link
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Add Button Modal-->
+
+                    <!-- Page Content Row -->
+                    <div class="row">
+                        <div class="col-md-8 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title text-center">Testimonials</h4>
+                                </div>
+                                <div class="card-body">
+                                <% if (testys && testys.length> 0) { %>
+                                    <div class="list-wrapper pt-2">
+                                        <ul class="todo-list todo-list-custom">
+                                        <% for (var t=0; t < testys.length; t++) { %>
+                                            <li>
+                                                
+                                            </li>
+
+                                        <% } %>
+                                        </ul>
+                                    </div>
+                                <% } else { %>
+                                <div
+                                    class="text-danger text-center alert alert-success d-flex w-100">
+                                    No Testimonials Available
+                                </div>
+                                <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <% include includes/activities %>
+                    </div>
+                    <!-- Page Content Row -->
+
+
+                </div>
+
+            </div>
+            <% include includes/modal_1 %>
+        </div>
+
+    </body>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/custom/design.js"></script>
+    <script type="module" src="/js/custom/validator.js"></script>
+    <script type="module" src="/js/custom/helper.js"></script>
+    <script type="module" src="/js/custom/script_5.js"></script>
+
+    </html>

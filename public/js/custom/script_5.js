@@ -1,99 +1,22 @@
 import { swalShowError, swalShowLoading, validateName, isUrlValid } from './helper.js';
 
 jQuery(document).ready(function ($) {
-    var addSocLink = $("#socLinkAdd");
+    var testyMdl = $("#testyMdl");
+    var mdl = $("#testyModal")
     var errorClass = "swal2-validation-message";
     var active = $(".active");
     var edit = $(".edit");
     var remove = $(".remove");
 
 
-    addSocLink.on("click", async function (e) {
+    testyMdl.on("click", async function (e) {
         e.preventDefault();
         e.stopPropagation();
-        let name, link = ""
-
-
-        Swal.fire({
-            title: 'Input Social Link Name',
-            input: 'text',
-            showCancelButton: true,
-            showLoaderOnConfirm: true,
-            preConfirm: (namey) => {
-
-                var state = validateName(namey);
-
-                if (!state) {
-                    swalShowError("Social Link Name is not valid", errorClass);
-                } else {
-                    return namey;
-                }
-            },
-        }).then(function (result) {
-            name = result.value;
-
-            if (name && name != "") {
-                Swal.fire({
-                    title: 'Input Social Link Address (e.g https://facebook/ojooh.com)',
-                    input: 'text',
-                    showCancelButton: true,
-                    showLoaderOnConfirm: true,
-                    preConfirm: (linky) => {
-
-                        var state = isUrlValid(linky);
-
-                        if (!state) {
-                            swalShowError("Social Link Address is not valid", errorClass);
-                        } else {
-                            return linky;
-                        }
-                    },
-                }).then(function (result) {
-                    link = result.value;
-
-                    if (link && link != "") {
-                        let url = "/admin/social_links";
-                        let data = { "name": name, 'link': link };
-
-                        $.ajax({
-                            url: url,
-                            data: data,
-                            type: "post",
-                            beforeSend: function () {
-                                swalShowLoading("Creating Social Link", "Please wait, while Social Link is being created")
-                            },
-                            success: function (data) {
-                                if (data.success) {
-
-                                    Swal.fire(data.success, "Click OK to proceed", "success").then(
-                                        function () {
-                                            location.reload();
-                                        }
-                                    )
-                                }
-                                else {
-                                    swal.close();
-                                    Swal.fire(data.error, "Click OK to proceed", "error").then(
-                                        function () {
-                                            location.reload();
-                                        }
-                                    )
-                                }
-
-                            }
-                        });
-
-                    }
-
-                });
-
-            }
-        });
-
-
-
-
-
+        $("input").val("");
+        $("textarea").val("");
+        $(".modal-title").html("Add Testimonial");
+        console.log("here");
+        mdl.modal("show");
     });
 
     active.on("change", function (e) {

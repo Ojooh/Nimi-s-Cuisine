@@ -44,12 +44,15 @@
         <div data-aos="fade-up" data-aos-delay="0" class="scroll-down-wrap">
             <span class="scroll-down"><span>scroll down</span></span>
         </div>
-        
+    
+    <%if (sl && sl.length> 0) { %>
         <ul class="list-unstyled social-hero-section mb-0">
-            <li data-aos="fade-left" data-aos-delay="0"><a href="#"><i class="fab fa-whatsapp"></i></a></li>
-            <li data-aos="fade-left" data-aos-delay="100"><a href="#"><i class="fab fa-instagram"></i></a></li>
-            <li data-aos="fade-left" data-aos-delay="200"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-            <li data-aos="fade-left" data-aos-delay="300"><a href="#"><i class="fab fa-twitter"></i></a></li>
+        <% for (var v=0; v < sl.length; v++) { %>
+            <li data-aos="fade-left" data-aos-delay="<%= v *100 %>">
+                <a href="<%= sl[v].link %>" target="blank"><i class="<%= sl[v].class %>"></i></a>
+            </li>
+        <% } %>
         </ul>
+    <% } %>
 </div>
 <!-- Slider End -->

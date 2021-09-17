@@ -1,7 +1,7 @@
 // const User = require('./db_controller');
 var helper = require("./helper");
 
-module.exports.validSocials = (req,) => {
+module.exports.validSocials = async (req) => {
 
     if (helper.isEmpty(req.body.name) || (helper.validateName(req.body.name) == false)) {
         return [null, false, { message: 'Social Link Name Input is not Valid' }];
@@ -10,7 +10,7 @@ module.exports.validSocials = (req,) => {
         return [null, false, { message: 'Social Link Address Input is not Valid' }];
     }
     else {
-        var slug = "fab fa-" + req.body.name.toLowerCase();
+        var slug = await helper.generateClassName(req.body)
         return [slug, true, { message: req.body.name + ' Social Link Profile Created successfully' }];
     }
 

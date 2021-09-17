@@ -20,6 +20,13 @@ module.exports.getHomePage = async (req, res, next) => {
     var Sliders = await DB.runSQLQuery(sql);
 
     param1 = ["*"];
+    param2 = "social_links";
+    param3 = { "is_active": "1" };
+    var sql = DB.generateSelectSQL(param1, param2, param3);
+    console.log(sql)
+    var SLinks = await DB.runSQLQuery(sql);
+
+    param1 = ["*"];
     param2 = "texts";
     param3 = { "category": "slider" };
 
@@ -28,7 +35,7 @@ module.exports.getHomePage = async (req, res, next) => {
     var Texts = await DB.runSQLQuery(sql);
     Txt = ((Texts && Texts.length > 0) ? JSON.parse(Texts[0].texts) : '');
 
-    var context = { txt: Txt, lnks: Links, slds: Sliders, actv: 'Home' };
+    var context = { sl: SLinks, txt: Txt, lnks: Links, slds: Sliders, actv: 'Home' };
     res.render('nimi/index', context);
 };
 

@@ -45,11 +45,14 @@ router.get('/social_links', adminHandler.getSocialLinks);
 /* POST New Social Link Profile. */
 router.post('/social_links', adminHandler.createSocialLink);
 
-// /* POST Social Link Profile Edit. */
-// router.post('/social_links/edit', adminHandler.updateSocialLink);
+/* POST Social Link Profile Edit. */
+router.post('/social_link/edit', adminHandler.updateSocialLinkProfile);
 
-// /* POST delete Social Link Profile. */
-// router.post('/social_links/delete', adminHandler.destroySocialLink);
+/* POST delete Social Link Profile. */
+router.post('/social_link/delete', adminHandler.destroySocialLink);
+
+/* GET Testimonials page. */
+router.get('/testimonials', adminHandler.getTestys);
 
 
 

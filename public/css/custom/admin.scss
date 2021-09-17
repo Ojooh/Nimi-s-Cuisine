@@ -563,6 +563,10 @@ a {
       }
     }
 
+    .social {
+      font-size: 20px;
+    }
+
     @media (max-width: 768px) {
       width: 100%;
       left: 0;
@@ -575,6 +579,23 @@ a {
       }
       #sidebarCollapse span {
         display: none;
+      }
+    }
+  }
+
+  .modal {
+    .modal-content {
+      border-radius: 10%;
+      position: relative;
+
+      .avatar {
+        width: 100px;
+        height: 100px;
+        background-color: #ffffff;
+        border-radius: 50%;
+        position: absolute;
+        top: -50px;
+        left: calc(50% - 50px);
       }
     }
   }

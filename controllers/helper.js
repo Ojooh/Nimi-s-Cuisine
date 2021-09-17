@@ -293,3 +293,22 @@ module.exports.isUrlValid = (userInput) => {
         return true;
 }
 
+module.exports.generateClassName = async (dik) => {
+    let name = dik.name.toLowerCase();
+    console.log(dik)
+
+    if (!dik.ID && dik.ID === undefined) {
+        return "fab fa-" + name;
+    } else {
+        let param1 = ["*"];
+        let param2 = "social_links";
+        let param3 = { "id": dik.ID };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        console.log(sql)
+        var Links = await DB.runSQLQuery(sql);
+        let pre = Links[0].class.split("-")[0];
+        console.log(pre)
+        return pre + "-" + name;
+    }
+}
+

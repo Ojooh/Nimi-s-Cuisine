@@ -170,7 +170,7 @@ module.exports.createNavLinks = async (req, res, next) => {
                 await DB.runSQLQuery(sql);
                 let subj = "Created " + req.body.name + " Nav Link";
                 param1 = "activities";
-                param2 = { "activity_type": "website_update", "title": subj, "category": "nav_link", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param2 = { "activity_type": "website_update", "category": "nav_link", "title": subj, "category": "nav_link", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
                 param3 = param2;
                 var sql = DB.generateInsertSQL(param1, param2, param3);
                 console.log(sql)
@@ -222,7 +222,7 @@ module.exports.updateNavLinkStatus = async (req, res, next) => {
                     subj = "Updated " + name + " Nav Link, set to In-active";
                 }
                 param1 = "activities";
-                param2 = { "activity_type": "website_update", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param2 = { "activity_type": "website_update", "category": "nav_link", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
                 param3 = param2;
                 var sql = DB.generateInsertSQL(param1, param2, param3);
                 console.log(sql)
@@ -268,7 +268,7 @@ module.exports.updateNavLinkProfile = async (req, res, next) => {
                 await DB.runSQLQuery(sql);
                 let subj = "Updated " + req.body.name + " Nav Link Profile";
                 param1 = "activities";
-                param2 = { "activity_type": "website_update", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param2 = { "activity_type": "website_update", "category": "nav_link", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
                 param3 = param2;
                 var sql = DB.generateInsertSQL(param1, param2, param3);
                 console.log(sql)
@@ -321,7 +321,7 @@ module.exports.createSubNavLink = async (req, res, next) => {
 
                 let subj = "Created " + req.body.name + " Sub Nav Link Profile";
                 param1 = "activities";
-                param2 = { "activity_type": "website_update", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param2 = { "activity_type": "website_update", "category": "nav_link", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
                 param3 = param2;
                 var sql = DB.generateInsertSQL(param1, param2, param3);
                 console.log(sql)
@@ -370,7 +370,7 @@ module.exports.destroyNavLink = async (req, res, next) => {
                 subj = "Updated " + name + " Nav Link Profile, Profile Destroyed";
 
                 param1 = "activities";
-                param2 = { "activity_type": "website_update", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param2 = { "activity_type": "website_update", "category": "nav_link", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
                 param3 = param2;
                 var sql = DB.generateInsertSQL(param1, param2, param3);
                 console.log(sql)
@@ -762,7 +762,7 @@ module.exports.createSocialLink = async (req, res, next) => {
 
         if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
             var data = {};
-            var [blah, state, msg] = vd.validSocials(req);
+            var [blah, state, msg] = await vd.validSocials(req);
 
             if (state) {
                 var email = req.session.username;
@@ -795,3 +795,139 @@ module.exports.createSocialLink = async (req, res, next) => {
     }
 };
 
+// Function to edit Social Link Profile
+module.exports.updateSocialLinkProfile = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = await vd.validSocials(req);
+
+            if (state) {
+                let param1 = "social_links";
+                let param2 = { "name": req.body.name, "link": req.body.link, "class": blah };
+                let param3 = { "id": req.body.ID };
+                var sql = DB.generateUpdateSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                let subj = "Updated " + req.body.name + " Social Link Profile";
+                param1 = "activities";
+                param2 = { "activity_type": "website_update", "category": "soc_link", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                console.log(sql)
+                await DB.runSQLQuery(sql);
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+// Function to destroy NavLinks
+module.exports.destroySocialLink = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var id = req.body.ID;
+            var name = req.body.name;
+            let subj = ""
+
+            if (name && id) {
+                let param1 = "social_links";
+                let param2 = { "id": id };
+
+                var sql = DB.generateDeleteSQL(param1, param2);
+                await DB.runSQLQuery(sql);
+
+                subj = "Updated " + name + " Social Link Profile, Profile Destroyed";
+
+                param1 = "activities";
+                param2 = { "activity_type": "website_update", "category": "soc_link", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                console.log(sql)
+                await DB.runSQLQuery(sql);
+                data.success = subj;
+                res.json(data)
+            } else {
+                data.error = "Something Went Wrong, Please Try Again";
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+
+//Function To Render NavLinks Page
+module.exports.getTestys = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var icon = "fas fa-users";
+            var title = "Testimonials"
+
+            let param1 = ["*"];
+            let param2 = "testys";
+            let param3 = "";
+            var sql = DB.generateSelectSQL(param1, param2, param3);
+            console.log(sql)
+            var Testys = await DB.runSQLQuery(sql);
+
+            param1 = ["*"];
+            param2 = "activities";
+            param3 = { "is_active": '1&', "category": "testy" };
+            let param4 = "ORDER BY date_created DESC LIMIT 10";
+            var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+            var activities = await DB.runSQLQuery(sql);
+
+            const sidebar = { dash: "", web: "active", prd: "", ords: "", pays: "", usrs: "" }
+            sidebar.testys = "active";
+            let context = { testys: Testys, acts: activities, user: User[0], sidebar: sidebar, icon: icon, title: title };
+            res.render('admin/testy', context);
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
