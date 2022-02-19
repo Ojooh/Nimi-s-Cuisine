@@ -138,6 +138,43 @@ const isImage = (file) => {
     }
 };
 
+
+const isTransImage = (file) => {
+    return new Promise((resolve, reject) => {
+        let hasAlpha = false;
+        const canvas = document.querySelector('canvas');
+        const gigy = document.getElementsByClassName('img-fluidy');
+        canvas.classList.remove("d-none");
+        if (gigy.length > 0) {
+            gigy[0].classList.add("d-none");
+        }
+        const ctx = canvas.getContext('2d');
+
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onerror = reject;
+        img.onload = function () {
+            // canvas.width = 100;
+            canvas.height = img.height;
+
+            ctx.drawImage(img, 0, 0);
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+            for (let j = 0; j < imgData.length; j += 4) {
+                if (imgData[j + 3] < 255) {
+                    hasAlpha = true;
+                    break;
+                }
+            }
+            resolve(hasAlpha);
+        };
+        img.src = URL.createObjectURL(file);
+    });
+}
+
+
+
+
 //Is Doc
 const isDoc = (file) => {
     if (file.mimetype == "image/jpeg" || file.mimetype == "image/png" || file.mimetype == "application/pdf" || file.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
@@ -276,7 +313,7 @@ const swalShowLoading = (title, msg, timer = 40000) => {
 export {
     showError, isEmpty, validFutureDate, validateName, validateNamey, validateEmail, validateUsername, validateTel,
     validatePass, validateAge, isUrlValid, validFBLink, validIGLink, validtwitterLink, generateUserType, isImage,
-    isDoc, splitArray, paginateArray, validGreaterDate, validYTLink, swalShowError, swalShowLoading
+    isDoc, splitArray, paginateArray, validGreaterDate, validYTLink, swalShowError, swalShowLoading, isTransImage
 }
 
 

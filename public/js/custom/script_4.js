@@ -227,9 +227,9 @@ jQuery(document).ready(function ($) {
         e.stopPropagation();
 
         var ID = $(this).attr("data-id");
-        let data = { "name": $(this).attr("data-name"), "ID": ID };
+        let data = { extra: "soc_link", "item": "social_links", "item_name": "Social Link", "name": $(this).attr("data-name"), "ID": ID };
 
-        let url = "/admin/social_link/delete"
+        let url = "/admin/item/delete"
 
         Swal.fire({
             title: 'Are you sure want to Delete ?',

@@ -23,8 +23,9 @@ module.exports.getDashboard = async (req, res, next) => {
         var User = await DB.runSQLQuery(sql);
 
         if (User && User.length > 0 && User[0].is_active == '1') {
-            const sidebar = { dash: "active", web: "", prd: "", ords: "", pays: "", usrs: "" }
-            let context = { user: User[0], sidebar: sidebar };
+            let sb = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" };
+            sb.dash = "active"
+            let context = { user: User[0], sidebar: sb };
             res.render('admin/index', context);
             // var email = req.session.username;
             // var user = await DB.getUserByEmail(email);
@@ -132,9 +133,10 @@ module.exports.getNavLinks = async (req, res, next) => {
             var sql = DB.generateSelectSQL(param1, param2, param3, param4);
             console.log(sql);
             var activities = await DB.runSQLQuery(sql);
-            const sidebar = { dash: "", web: "active", prd: "", ords: "", pays: "", usrs: "" }
-            sidebar.nav_link = "active";
-            let context = { links: Links, acts: activities, user: User[0], sidebar: sidebar, icon: icon, title: title };
+            let sb = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" };
+            sb.web = "actiave"
+            sb.nav_link = "active";
+            let context = { links: Links, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
             res.render('admin/navLink', context);
         }
         else {
@@ -163,7 +165,7 @@ module.exports.createNavLinks = async (req, res, next) => {
             if (state) {
                 var email = req.session.username;
                 let param1 = "nav_links";
-                let param2 = { "name": req.body.name, "link": blah, "created_by": User[0].user_id, "category": "nav_link", "is_active": '1' };
+                let param2 = { "name": req.body.name, "link": blah, "created_by": User[0].user_id, "is_active": '1' };
                 let param3 = param2;
                 var sql = DB.generateInsertSQL(param1, param2, param3);
                 console.log(sql)
@@ -192,7 +194,7 @@ module.exports.createNavLinks = async (req, res, next) => {
 };
 
 //Function To Update NavLink Status
-module.exports.updateNavLinkStatus = async (req, res, next) => {
+module.exports.updateStatus = async (req, res, next) => {
     console.log(req.session.loggedin)
     if (req.session.username && req.session.loggedin) {
         var email = req.session.username;
@@ -204,12 +206,13 @@ module.exports.updateNavLinkStatus = async (req, res, next) => {
         if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
             var data = {};
             var state = req.body.state;
+            var item = req.body.item;
             var id = req.body.ID;
             var name = req.body.name;
             ; let subj = ""
 
             if (state && id) {
-                let param1 = "nav_links";
+                let param1 = item;
                 let param2 = { "is_active": state };
                 let param3 = { "id": id };
                 var sql = DB.generateUpdateSQL(param1, param2, param3);
@@ -217,12 +220,17 @@ module.exports.updateNavLinkStatus = async (req, res, next) => {
                 var dn = await DB.runSQLQuery(sql);
                 console.log(dn);
                 if (state == '1') {
-                    subj = "Updated " + name + " Nav Link, set to Active";
+                    subj = "Updated " + name + " " + item + ", set to Active";
                 } else {
-                    subj = "Updated " + name + " Nav Link, set to In-active";
+                    subj = "Updated " + name + " " + item + ", set to In-active";
+                }
+                let ty = "website_update"
+                if (item == "categories") {
+                    ty = "category_update";
+                    item = "category";
                 }
                 param1 = "activities";
-                param2 = { "activity_type": "website_update", "category": "nav_link", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param2 = { "activity_type": ty, "category": item, "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
                 param3 = param2;
                 var sql = DB.generateInsertSQL(param1, param2, param3);
                 console.log(sql)
@@ -434,10 +442,10 @@ module.exports.getSliders = async (req, res, next) => {
             var sql = DB.generateSelectSQL(param1, param2, param3, param4);
             console.log(sql);
             var activities = await DB.runSQLQuery(sql);
-
-            const sidebar = { dash: "", web: "active", prd: "", ords: "", pays: "", usrs: "" }
-            sidebar.slider = "active";
-            let context = { rank: rank, sliders: Sliders, txts: Txt, acts: activities, user: User[0], sidebar: sidebar, icon: icon, title: title };
+            let sb = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" };;
+            sb.web = "active"
+            sb.slider = "active";
+            let context = { rank: rank, sliders: Sliders, txts: Txt, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
             res.render('admin/slider', context);
         }
         else {
@@ -735,9 +743,10 @@ module.exports.getSocialLinks = async (req, res, next) => {
             var sql = DB.generateSelectSQL(param1, param2, param3, param4);
             var activities = await DB.runSQLQuery(sql);
 
-            const sidebar = { dash: "", web: "active", prd: "", ords: "", pays: "", usrs: "" }
-            sidebar.soc_link = "active";
-            let context = { links: Links, acts: activities, user: User[0], sidebar: sidebar, icon: icon, title: title };
+            let sb = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" };
+            sb.web = "active";
+            sb.soc_link = "active";
+            let context = { links: Links, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
             res.render('admin/socialLinks', context);
         }
         else {
@@ -840,8 +849,8 @@ module.exports.updateSocialLinkProfile = async (req, res, next) => {
     }
 };
 
-// Function to destroy NavLinks
-module.exports.destroySocialLink = async (req, res, next) => {
+// Function to destroy SocialLinks
+module.exports.destroyItem = async (req, res, next) => {
     console.log(req.session.loggedin)
     if (req.session.username && req.session.loggedin) {
         var email = req.session.username;
@@ -855,19 +864,46 @@ module.exports.destroySocialLink = async (req, res, next) => {
             var data = {};
             var id = req.body.ID;
             var name = req.body.name;
+            let item = req.body.item;
+            let item_n = req.body.item_name;
             let subj = ""
 
             if (name && id) {
-                let param1 = "social_links";
+                let one = ["*"];
+                let two = item;
+                let three = { "id": id };
+                var sql = DB.generateSelectSQL(one, two, three);
+                var sld = await DB.runSQLQuery(sql);
+
+                let param1 = item;
                 let param2 = { "id": id };
+
+                if (sld[0].img && sld[0].img !== undefined && sld[0].img != "") {
+                    let url = path.join(__dirname, '../', 'public') + sld[0].img
+                    fs.unlink(url, function (err) {
+                        if (err) throw err;
+                        // if no error, file has been deleted successfully
+                        console.log('File deleted!');
+                    });
+                }
 
                 var sql = DB.generateDeleteSQL(param1, param2);
                 await DB.runSQLQuery(sql);
 
-                subj = "Updated " + name + " Social Link Profile, Profile Destroyed";
+                subj = "Updated " + name + " " + item_n + " Profile, Profile Destroyed";
+
+                let ty = "website_update"
+                if (item == "categories") {
+                    ty = "category_update";
+                    item = "category";
+                }
+                catyn = item
+                if (req.body.extra) {
+                    catyn = req.body.extra
+                }
 
                 param1 = "activities";
-                param2 = { "activity_type": "website_update", "category": "soc_link", "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param2 = { "activity_type": ty, "category": catyn, "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
                 param3 = param2;
                 var sql = DB.generateInsertSQL(param1, param2, param3);
                 console.log(sql)
@@ -918,10 +954,227 @@ module.exports.getTestys = async (req, res, next) => {
             var sql = DB.generateSelectSQL(param1, param2, param3, param4);
             var activities = await DB.runSQLQuery(sql);
 
-            const sidebar = { dash: "", web: "active", prd: "", ords: "", pays: "", usrs: "" }
-            sidebar.testys = "active";
-            let context = { testys: Testys, acts: activities, user: User[0], sidebar: sidebar, icon: icon, title: title };
+            let sb = {
+                dash: "", web: "", prd: "", ords: "", pays: "", usrs: ""
+            };
+            sb.web = "active";
+            sb.testys = "active";
+            let context = { testys: Testys, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
             res.render('admin/testy', context);
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+
+// Function to render Product Category Page
+module.exports.getProdCategories = async (req, res) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var icon = "fa fa-th";
+            var title = "Product Category"
+
+            let param1 = ["*"];
+            let param2 = "categories";
+            let param3 = { "is_active": "1/", "is_active>": "0" };
+            var sql = DB.generateSelectSQL(param1, param2, param3);
+            var Cats = await DB.runSQLQuery(sql);
+
+            param1 = ["*"];
+            param2 = "activities";
+            param3 = { "is_active": '1&', "category": "category" };
+            let param4 = "ORDER BY date_created DESC LIMIT 10";
+            var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+            var activities = await DB.runSQLQuery(sql);
+
+            let sb = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" };
+            sb.prd = "active"
+            sb.category = "active";
+            let context = { cats: Cats, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
+            res.render('admin/category', context);
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Create New Navlink Profile
+module.exports.addCategory = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = await vd.validCategory(req);
+
+            if (state) {
+                var email = req.session.username;
+                let param1 = "categories";
+                if (req.files && req.files !== undefined && req.files.link && req.files.link !== undefined && req.files.link != "") {
+                    let img = req.files.link;
+                    let ext = img.name.split(".");
+                    let new_name = uuidv4() + "." + ext[ext.length - 1];
+                    let dir = "public/img/categories/" + new_name;
+                    let db_path = "/img/categories/" + new_name;
+                    let param2 = { "name": req.body.name, "img": db_path, "is_active": '1' };
+                    let param3 = param2;
+                    var sql = DB.generateInsertSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                    img.mv(dir)
+                } else {
+                    let param2 = { "name": req.body.name, "img": "", "is_active": '1' };
+                    let param3 = param2;
+                    var sql = DB.generateInsertSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                }
+
+
+                let subj = "Created " + req.body.name + " Category";
+                param1 = "activities";
+                param2 = { "activity_type": "category_update", "title": subj, "category": "category", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Create New Navlink Profile
+module.exports.editCategory = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = await vd.validCategory(req);
+            let one = ["img"];
+            let two = "categories";
+            let three = { "id": req.body.ID };
+            var sql = DB.generateSelectSQL(one, two, three);
+            var caty = await DB.runSQLQuery(sql);
+
+            if (state) {
+                var email = req.session.username;
+                let param1 = "categories";
+                if (req.files && req.files !== undefined && req.files.link && req.files.link !== undefined && req.files.link != "") {
+                    let img = req.files.link;
+                    let ext = img.name.split(".");
+                    let new_name = uuidv4() + "." + ext[ext.length - 1];
+                    let dir = "public/img/categories/" + new_name;
+                    let db_path = "/img/categories/" + new_name;
+                    let param2 = { "name": req.body.name, "img": db_path, "is_active": '1' };
+                    let param3 = { "id": req.body.ID };
+                    var sql = DB.generateUpdateSQL(param1, param2, param3);
+                    console.log(sql)
+                    await DB.runSQLQuery(sql);
+                    img.mv(dir)
+                } else {
+                    let param2 = { "name": req.body.name, "img": caty[0].img, "is_active": '1' };
+                    let param3 = { "id": req.body.ID };
+                    var sql = DB.generateUpdateSQL(param1, param2, param3);
+                    console.log(sql)
+                    await DB.runSQLQuery(sql);
+                }
+
+
+                let subj = "Updated " + req.body.name + " Category";
+                param1 = "activities";
+                param2 = { "activity_type": "category_update", "title": subj, "category": "category", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+// Function to render Product Category Page
+module.exports.getProds = async (req, res) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var icon = "fab fa-product-hunt";
+            var title = "Products"
+
+            let param1 = ["*"];
+            let param2 = "products";
+            let param3 = { "is_active": "1/", "is_active>": "0" };
+            var sql = DB.generateSelectSQL(param1, param2, param3);
+            var Prds = await DB.runSQLQuery(sql);
+
+            param1 = ["*"];
+            param2 = "activities";
+            param3 = { "is_active": '1&', "category": "product" };
+            let param4 = "ORDER BY date_created DESC LIMIT 10";
+            var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+            var activities = await DB.runSQLQuery(sql);
+
+            let sb = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" };
+            sb.prd = "active"
+            sb.prds = "active";
+            let context = { prds: Prds, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
+            res.render('admin/product', context);
         }
         else {
             res.redirect("/auth/login");

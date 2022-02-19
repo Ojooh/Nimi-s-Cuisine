@@ -77,8 +77,8 @@ jQuery(document).ready(function ($) {
     });
 
     active.on("change", function (e) {
-        let url = "/admin/navbar-link/status";
-        let data = { "name": $(this).attr("data-name"), "state": $(this).val(), "ID": $(this).attr("id") };
+        let url = "/admin/item/status";
+        let data = { "item": "nav_links", "name": $(this).attr("data-name"), "state": $(this).val(), "ID": $(this).attr("id") };
 
         $.ajax({
             url: url,
@@ -253,9 +253,9 @@ jQuery(document).ready(function ($) {
         e.stopPropagation();
 
         var ID = $(this).attr("data-id");
-        let data = { "name": $(this).attr("data-name"), "ID": ID };
+        let data = { extra: "nav_link", "item": "nav_links", "item_name": "Navbar Link", "name": $(this).attr("data-name"), "ID": ID };
 
-        let url = "/admin/navbar-link/delete"
+        let url = "/admin/item/delete"
 
         Swal.fire({
             icon: 'question',

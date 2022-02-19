@@ -204,7 +204,7 @@ module.exports.generateUserType = (title) => {
 
 //Is Image
 module.exports.isImage = (file) => {
-    if (file.mimetype == "image/jpeg" || file.mimetype == "image/png" || file.type == "image/webp") {
+    if (file.mimetype == "image/jpeg" || file.mimetype == "image/png" || file.mimetype == "image/webp") {
         return true;
     } else {
         return false;
@@ -310,5 +310,16 @@ module.exports.generateClassName = async (dik) => {
         console.log(pre)
         return pre + "-" + name;
     }
+}
+
+module.exports.sentenceCase = (str) => {
+    const arr = str.split(" ");
+
+    for (var i = 0; i < arr.length; i++) {
+        arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+
+    }
+    const str2 = arr.join(" ");
+    return str2
 }
 

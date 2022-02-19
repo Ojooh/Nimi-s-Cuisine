@@ -219,10 +219,9 @@ jQuery(document).ready(function ($) {
         e.stopPropagation();
 
         var ID = $(this).attr("data-id");
-        let data = { "name": $(this).attr("data-name"), "ID": ID };
+        let data = { extra: "slider", "item": "sliders", "item_name": "Slider", "name": $(this).attr("data-name"), "ID": ID };
 
-        let url = "/admin/slider/delete"
-
+        let url = "/admin/item/delete"
         Swal.fire({
             title: 'Are you sure want to Delete ?',
             text: "You won't be able to revert this!",

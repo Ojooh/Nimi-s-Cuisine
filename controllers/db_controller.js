@@ -54,10 +54,13 @@ module.exports.generateSelectSQL = (param1, param2, param3, param4 = "") => {
     let obj = param3
     let where = '(';
     if (obj && obj != "") {
-        console.log(obj);
+        // console.log(obj);
         Object.keys(obj).forEach(function (key) {
             j = obj[key]
             console.log(j)
+            if (key[key.length -1] == ">") {
+                key = key.slice(0, -1);
+            }
             if (j[j.length - 1] == '&') {
                 const val = j.slice(0, -1)
                 where = where + key + " = '" + val + "') AND (";

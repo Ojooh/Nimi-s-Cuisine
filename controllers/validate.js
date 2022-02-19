@@ -11,6 +11,7 @@ module.exports.validSocials = async (req) => {
     }
     else {
         var slug = await helper.generateClassName(req.body)
+        req.body.name = helper.sentenceCase(req.body.name);
         return [slug, true, { message: req.body.name + ' Social Link Profile Created successfully' }];
     }
 
@@ -50,7 +51,7 @@ module.exports.validSlider = (req,) => {
         return [null, false, { message: 'Slider Has reached max value, Delete previous slider to add new one' }];
     }
     else {
-        ;
+        req.body.name = helper.sentenceCase(req.body.name);
         return [null, true, { message: req.body.name + ' Slider Profile Created successfully' }];
     }
 
@@ -65,6 +66,29 @@ module.exports.validNavLinkName = (req,) => {
     else {
         var slug = req.body.name.toLowerCase();
         return [slug, true, { message: req.body.name + ' Nav Link Profile Created successfully' }];
+    }
+
+
+};
+
+module.exports.validCategory = (req,) => {
+    console.log(req.body)
+    console.log(req.query)
+
+    if (helper.isEmpty(req.body.name) || (helper.validateNamey(req.body.name) == false)) {
+        return [null, false, { message: 'Category Name Input is not Valid' }];
+    }
+    else if ((req.files && helper.isImage(req.files.link) == false)) {
+        console.log(helper.isImage(req.files.link));
+        return [null, false, { message: 'File Sent is not an Image' }];
+    }
+    else {
+        req.body.name = helper.sentenceCase(req.body.name);
+        let msg = req.body.name + ' Category Profile Created successfully'
+        if (req.body.type != "add") {
+            msg = req.body.name + ' Category Profile Updated successfully'
+        }
+        return [null, true, { message: msg }];
     }
 
 

@@ -35,7 +35,16 @@ module.exports.getHomePage = async (req, res, next) => {
     var Texts = await DB.runSQLQuery(sql);
     Txt = ((Texts && Texts.length > 0) ? JSON.parse(Texts[0].texts) : '');
 
-    var context = { sl: SLinks, txt: Txt, lnks: Links, slds: Sliders, actv: 'Home' };
+    param1 = ["*"];
+    param2 = "categories";
+    param3 = { "is_active": "1" };
+    param4 = "LIMIT 4"
+
+    var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+    console.log(sql)
+    var Cats = await DB.runSQLQuery(sql);
+
+    var context = { cats: Cats, sl: SLinks, txt: Txt, lnks: Links, slds: Sliders, actv: 'Home' };
     res.render('nimi/index', context);
 };
 

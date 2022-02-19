@@ -54,9 +54,22 @@
         </li>
 
         <li class="<%= sidebar.prd %>">
-            <a href="#">
-                <i class="fab fa-product-hunt"></i> Product
+            <a href="#prodSubmenu" data-toggle="collapse"
+                aria-expanded="<%= ((sidebar.prd && sidebar.prd !== '') ? true : false)  %>" class="dropdown-toggle">
+                <i class="fab fa-product-hunt"></i> Products
             </a>
+            <ul class="collapse list-unstyled <%= ((sidebar.prd && sidebar.prd !== '') ? 'show' : '')  %>" id="prodSubmenu">
+                <li class="<%= ((sidebar.category && sidebar.category !== '') ? sidebar.category : '')  %>">
+                    <a href="/admin/categories">
+                        <i class="fa fa-th" aria-hidden="true"></i> Categories
+                    </a>
+                </li>
+                <li class="<%= ((sidebar.prds && sidebar.prds !== '') ? sidebar.prds : '')  %>">
+                    <a href="/admin/products">
+                        <i class="fab fa-product-hunt" aria-hidden="true"></i> Products
+                    </a>
+                </li>
+            </ul>
         </li>
         <li class="<%= sidebar.ords %>">
             <a href="#">

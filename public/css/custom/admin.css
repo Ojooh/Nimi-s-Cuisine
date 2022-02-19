@@ -26,6 +26,15 @@ html::-webkit-scrollbar-thumb {
   outline: 1px solid slategrey;
 }
 
+.img-fluidy {
+  max-width: 100%;
+}
+
+canvas {
+  width: 100% !important;
+  height: 200px !important;
+}
+
 .deactivated {
   display: none;
 }
@@ -541,6 +550,16 @@ a:hover {
 
 .wrapper #content .list-wrapper ul li:hover {
   border: 1px solid #4b49ac;
+}
+
+.wrapper #content .list-wrapper ul li .cat-img {
+  width: 125px;
+  height: 120px;
+}
+
+.wrapper #content .list-wrapper ul li .cat-img img {
+  width: 100%;
+  max-height: 120px;
 }
 
 .wrapper #content .list-wrapper ul li .form-check {

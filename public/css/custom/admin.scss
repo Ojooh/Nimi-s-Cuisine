@@ -23,6 +23,15 @@ html {
   }
 }
 
+.img-fluidy {
+  max-width: 100%;
+}
+
+canvas {
+  width: 100% !important;
+  height: 200px !important;
+}
+
 .deactivated {
   display: none;
 }
@@ -503,6 +512,15 @@ a {
 
         &:hover {
           border: 1px solid #4b49ac;
+        }
+
+        .cat-img {
+          width: 125px;
+          height: 120px;
+          img {
+            width: 100%;
+            max-height: 120px;
+          }
         }
         .form-check {
           max-width: 90%;

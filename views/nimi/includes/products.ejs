@@ -6,24 +6,18 @@
                     <span class="subtitle">Select your Meal</span>
                     <h3>Popular <strong class="text-primary">Foods</strong></h3>
                 </div>
+                <%if (cats && cats.length> 0) { %>
                 <ul class="list-unstyled untree_co-tab-nav js-custom-dots">
-                    <li class="active">
-                        <a href="#" class="d-flex align-items-center">
-                            <img src="images/1x/xnoodles.png.pagespeed.ic.92gTCmKOEF.webp" alt="Image"
-                                class="img-fluid">
-                            <span>Breakfast</span>
-                        </a>
-                    </li>
-                    <li><a href="#" class="d-flex align-items-center"> <img
-                                src="images/1x/xchicken.png.pagespeed.ic.19DDE1201n.webp" alt="Image" class="img-fluid">
-                            <span>Lunch</span></a></li>
-                    <li><a href="#" class="d-flex align-items-center"> <img
-                                src="images/1x/xhotdog.png.pagespeed.ic._X4fVEJ3u1.webp" alt="Image" class="img-fluid">
-                            <span>Dinner</span></a></li>
-                    <li><a href="#" class="d-flex align-items-center"> <img
-                                src="images/1x/xdrinks.png.pagespeed.ic.DlplwveR_n.webp" alt="Image" class="img-fluid">
-                            <span>Drinks</span></a></li>
+                    <% for (var t=0; t < cats.length; t++) { %>
+                        <li class="<%= ((t == 0) ? 'active' : '') %>">
+                            <a href="#" class="d-flex align-items-center">
+                                <img src="<%= cats[t].img %>" alt="<%= cats[t].name %> Category Image" class="img-fluid">
+                                <span><%= cats[t].name %></span>
+                            </a>
+                        </li>
+                    <% } %>
                 </ul>
+                <% } %>
             </div>
             <div class="col-lg-8 ml-auto" data-aos="fade-up" data-aos-delay="100">
                 <div class="owl-single no-dots owl-carousel">
