@@ -26,13 +26,45 @@ html::-webkit-scrollbar-thumb {
   outline: 1px solid slategrey;
 }
 
+.swal2-container {
+  overflow-y: scroll !important;
+}
+
+.swal2-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.swal2-container::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+          box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.swal2-container::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
 .img-fluidy {
   max-width: 100%;
+}
+
+textarea {
+  height: 180px;
 }
 
 canvas {
   width: 100% !important;
   height: 200px !important;
+}
+
+.prod-add-img {
+  width: 100%;
+  height: 250px;
+}
+
+.prod-add-img img {
+  width: 99%;
+  max-height: 200px;
 }
 
 .deactivated {

@@ -11,237 +11,65 @@
                     <% for (var t=0; t < cats.length; t++) { %>
                         <li class="<%= ((t == 0) ? 'active' : '') %>">
                             <a href="#" class="d-flex align-items-center">
-                                <img src="<%= cats[t].img %>" alt="<%= cats[t].name %> Category Image" class="img-fluid">
-                                <span><%= cats[t].name %></span>
+                                <% if (cats[t].img && cats[t].img != '') { %>
+                                    <img src="<%= cats[t].img %>" alt="<%= cats[t].name %> Category Image" class="img-fluid">
+                                <% } else { %>
+                                    <img src="/img/categories/default.png" alt="<%= cats[t].name %> Category Image" class="img-fluid">
+                                <% } %>
+                                    <span><%= cats[t].name %></span>
                             </a>
                         </li>
                     <% } %>
                 </ul>
                 <% } %>
             </div>
-            <div class="col-lg-8 ml-auto" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-lg-9 ml-auto" data-aos="fade-up" data-aos-delay="100">
+            <% if (cats && cats.length> 0) { %>
                 <div class="owl-single no-dots owl-carousel">
-                    <div class="item mx-2">
-                        <div class="row align-items-center mb-4">
-                            <div class="col-6">
-                                <h2 class="text-black">Breakfast</h2>
+                    <% for (var t=0; t < cats.length; t++) { %>
+                        <div class="item mx-2">
+                            <div class="row align-items-center mb-4">
+                                <div class="col-6">
+                                    <h2 class="text-black"><%= cats[t].name %></h2>
+                                </div>
+                                <div class="col-6 text-right number"><%= (t + 1).toString() + '/' + cats.length %></div>
                             </div>
-                            <div class="col-6 text-right number">1/4</div>
+                        <% if (prds && prds.length> 0) { %>
+                            <div class="row">
+                            <% for (var p=0; p < prds.length; p++) { var v = 0 %>
+                                <% if (prds[p] && prds[p].category == cats[t].id && v <= 3) { v = v + 1 %>
+                                <div class="col-6 col-lg-6 mb-4">
+                                    <div class="product">
+                                        <a href="#" class="thumbnail">
+                                        <% if (prds[p].img && prds[p].img != '') { %>
+                                            <img src="<%= prds[p].img; %>" alt="<%= prds[p].name; %>" class="img-fluid">
+                                        <% } else { %>
+                                            <img src="/img/prds/default.png" alt="<%= prds[p].name; %>" class="img-fluid">
+                                        <% } %>
+                                        </a>
+                                        <h3><a href="#"><%= prds[p].name; %></a></h3>
+                                        <div class="d-flex">
+                                        <% if (prds[p].discount && prds[p].discount !='' && prds[p].discount != 0 ) { %>
+                                            <div class="price strike">
+                                                &#8358; <%= (prds[p].price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "," ); %>
+                                            </div>
+                                            <div class="ml-3 discount">&#8358; <%= ( (parseFloat(prds[p].price)) - ( (parseFloat(prds[p].discount) / 100) *  parseFloat(prds[p].price) )).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "," ); %></div>
+                                        <% } else { %>
+                                            <div class="price">
+                                                &#8358; <%= (prds[p].price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "," ); %>
+                                            </div>
+                                        <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                            <% } %>
+                            </div>
+                        <% } %>
                         </div>
-                        <div class="row">
-                            <div class="col-6 col-lg-6 mb-4">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_1.jpg.pagespeed.ic.VpbnsnaQH0.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Italian Sauce Mushroom</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-4">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_2.jpg.pagespeed.ic.55LLOE9kW3.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Salted Fried Chicken</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-0">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_3.jpg.pagespeed.ic.BODKukXBDK.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Fried Potato w/ Garlic</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-0">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_4.jpg.pagespeed.ic.rA2X4qH1me.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Shrimp and olive</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="item mx-2">
-                        <div class="row align-items-center mb-4">
-                            <div class="col-6">
-                                <h2 class="text-black">Lunch</h2>
-                            </div>
-                            <div class="col-6 text-right number">2/4</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 col-lg-6 mb-4">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_1_b.jpg.pagespeed.ic.xI_LCEKnrv.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Italian Sauce Mushroom</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-4">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_2_b.jpg.pagespeed.ic.cc_QObtz2m.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Salted Fried Chicken</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-0">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_3_b.jpg.pagespeed.ic.v2DnERtnh7.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Fried Potato w/ Garlic</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-0">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_4_b.jpg.pagespeed.ic.nT4xKPv8mW.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Shrimp and olive</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="item mx-2">
-                        <div class="row align-items-center mb-4">
-                            <div class="col-6">
-                                <h2 class="text-black">Dinner</h2>
-                            </div>
-                            <div class="col-6 text-right number">3/4</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 col-lg-6 mb-4">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_1.jpg.pagespeed.ic.VpbnsnaQH0.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Italian Sauce Mushroom</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-4">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_2.jpg.pagespeed.ic.55LLOE9kW3.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Salted Fried Chicken</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-0">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_1.jpg.pagespeed.ic.VpbnsnaQH0.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Fried Potato w/ Garlic</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-0">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_2.jpg.pagespeed.ic.55LLOE9kW3.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Shrimp and olive</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="item mx-2">
-                        <div class="row align-items-center mb-4">
-                            <div class="col-6">
-                                <h2 class="text-black">Drinks</h2>
-                            </div>
-                            <div class="col-6 text-right number">4/4</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 col-lg-6 mb-4">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_1_d.jpg.pagespeed.ic.GsJi6X8mTu.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Italian Sauce Mushroom</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-4">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_2_d.jpg.pagespeed.ic.9EDBVJYz_t.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Salted Fried Chicken</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-0">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_3_d.jpg.pagespeed.ic.IpETz174WH.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Fried Potato w/ Garlic</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-6 mb-0">
-                                <div class="product">
-                                    <a href="#" class="thumbnail"><img
-                                            src="images/ximg_4_d.jpg.pagespeed.ic.pgUtHILOBE.webp" alt="Image"
-                                            class="img-fluid"></a>
-                                    <h3><a href="#">Shrimp and olive</a></h3>
-                                    <div class="d-flex">
-                                        <div class="price">$19.00</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
+                    <% } %>
                 </div>
+            <% } %>
             </div>
         </div>
     </div>

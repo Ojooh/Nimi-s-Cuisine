@@ -162,29 +162,32 @@ module.exports.uniqueRank = async (rank) => {
 
 }
 
+module.exports.getLastId = async (table) => {
+    let param1 = ["id"];
+    let param2 = table;
+    let param3 = "";
+    let param4 = "ORDER BY id DESC LIMIT 1"
+    var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+    console.log(sql);
+    var last = await DB.runSQLQuery(sql);
 
-
-
-
-//Genearte User ID
-module.exports.generateUserId = async (title, width) => {
-    if (title == 'KDS') {
-        var user = await User.getKidLastId();
+    if (last.length > 0) {
+        return last[0].id
     } else {
-        var user = await User.getLastId();
+        return 0;
     }
+}
 
-    if (user.length < 1) {
-        var t = 1;
-    } else {
-        var t = parseInt(user[0].id) + 1
-    }
 
-    n = t.toString() + '';
+//generate uid
+module.exports.generateUID = async (title, table, width) => {
+    var id = await this.getLastId(table);
+    let n = (id + 1).toString() + '';
     n = n.toString();
     pad_id = n.length >= width ? n : new Array(width - n.length + 1).join(0) + n;
     return title + "-" + pad_id;
-};
+
+}
 
 
 //Generate User Type
@@ -321,5 +324,64 @@ module.exports.sentenceCase = (str) => {
     }
     const str2 = arr.join(" ");
     return str2
+}
+
+
+module.exports.validInteger = (integer) => {
+    if (parseInt(integer) == NaN || parseInt(integer) <= 0) {
+        return false;
+    }
+    else {
+        return true
+    }
+
+}
+
+
+module.exports.validFloat = (float) => {
+    if (parseFloat(float) == NaN || parseFloat(float) < 0) {
+        return false;
+    }
+    else {
+        return true
+    }
+
+}
+
+module.exports.updateProdCategoryCount = async (side, id) => {
+    let param1 = ["id", "prd_count"];
+    let param2 = "categories";
+    let param3 = { "id": id };
+    var sql = DB.generateSelectSQL(param1, param2, param3);
+    var c = await DB.runSQLQuery(sql);
+
+    if (side == "positive") {
+        param2 = { "prd_count": parseInt(c[0].prd_count) + 1 };
+        param1 = "categories";
+        param3 = { "id": id };
+        sql = DB.generateUpdateSQL(param1, param2, param3);
+        await DB.runSQLQuery(sql);
+    } else {
+        param2 = { "prd_count": parseInt(c[0].prd_count) - 1 };
+        param1 = "categories";
+        param3 = { "id": id };
+        sql = DB.generateUpdateSQL(param1, param2, param3);
+        await DB.runSQLQuery(sql);
+    }
+
+}
+
+module.exports.validateCategory = async (category, type) => {
+    let param1 = ["id", "prd_count"];
+    let param2 = "categories";
+    let param3 = { "name": category };
+    var sql = DB.generateSelectSQL(param1, param2, param3);
+    var c = await DB.runSQLQuery(sql);
+
+    if (category.length > 0) {
+        return c[0].id;
+    } else {
+        return false;
+    }
 }
 

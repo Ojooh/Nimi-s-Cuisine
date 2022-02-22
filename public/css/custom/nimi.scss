@@ -972,7 +972,7 @@ a.text-primary:hover {
 }
 
 .product .thumbnail img {
-  width: 350px !important;
+  width: 320px !important;
   height: 200px !important;
   margin-bottom: 0;
   -webkit-transition: 0.3s all ease;
@@ -997,8 +997,22 @@ a.text-primary:hover {
   color: #000;
 }
 
-.product .price {
+.product .price,
+.discount {
   color: #ff5200;
+}
+
+.strike {
+  position: relative;
+}
+
+.strike:before {
+  content: ' ';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  border-bottom: 1px solid #111;
+  width: 100%;
 }
 
 .dess-item {
@@ -1060,6 +1074,57 @@ a.text-primary:hover {
 .bg-img > .container {
   position: relative;
   z-index: 1;
+}
+
+.testimonial-card {
+  width: 99%;
+  height: 314px;
+  padding: 20px 10px;
+  border: 1px solid black;
+  border-radius: 20px;
+
+  .testimonial-card-icon {
+    text-align: center;
+    font-size: 27px;
+    height: 50px;
+  }
+
+  .testimonial-comment {
+    text-align: center;
+    font-size: 16px;
+    max-height: 144px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: auto;
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      outline: 1px solid black;
+    }
+  }
+
+  .testimonial-footer {
+    height: 70px;
+    padding: 30px 10px 20px 10px;
+    text-align: center;
+  }
+}
+
+.owl-nav {
+  margin-top: 30px;
+  display: flex !important;
+  justify-content: center !important;
+
+  button {
+    font-size: 50px !important;
+  }
 }
 
 .testimonial-wrap {

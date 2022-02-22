@@ -131,7 +131,7 @@ const generateUserType = (title) => {
 //Is Image
 const isImage = (file) => {
     // console.log(file.mimetype)
-    if (file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/webp") {
+    if ((file && file !== undefined) && (file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/webp")) {
         return true;
     } else {
         return false;
@@ -171,6 +171,28 @@ const isTransImage = (file) => {
         img.src = URL.createObjectURL(file);
     });
 }
+
+const validInteger = (integer) => {
+    if (parseInt(integer) == NaN || parseInt(integer) <= 0) {
+        return false;
+    }
+    else {
+        return true
+    }
+
+}
+
+
+const validFloat = (float) => {
+    if (parseFloat(float) == NaN || parseFloat(float) < 0) {
+        return false;
+    }
+    else {
+        return true
+    }
+
+}
+
 
 
 
@@ -313,7 +335,8 @@ const swalShowLoading = (title, msg, timer = 40000) => {
 export {
     showError, isEmpty, validFutureDate, validateName, validateNamey, validateEmail, validateUsername, validateTel,
     validatePass, validateAge, isUrlValid, validFBLink, validIGLink, validtwitterLink, generateUserType, isImage,
-    isDoc, splitArray, paginateArray, validGreaterDate, validYTLink, swalShowError, swalShowLoading, isTransImage
+    isDoc, splitArray, paginateArray, validGreaterDate, validYTLink, swalShowError, swalShowLoading, isTransImage,
+    validInteger, validFloat,
 }
 
 

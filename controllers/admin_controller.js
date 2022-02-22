@@ -194,7 +194,7 @@ module.exports.createNavLinks = async (req, res, next) => {
 };
 
 //Function To Update NavLink Status
-module.exports.updateStatus = async (req, res, next) => {
+module.exports.updateItemStatus = async (req, res, next) => {
     console.log(req.session.loggedin)
     if (req.session.username && req.session.loggedin) {
         var email = req.session.username;
@@ -212,13 +212,27 @@ module.exports.updateStatus = async (req, res, next) => {
             ; let subj = ""
 
             if (state && id) {
+                let one = ["*"];
+                let two = item;
+                let three = { "id": id };
+                var sql = DB.generateSelectSQL(one, two, three);
+                var sld = await DB.runSQLQuery(sql);
+
                 let param1 = item;
                 let param2 = { "is_active": state };
                 let param3 = { "id": id };
                 var sql = DB.generateUpdateSQL(param1, param2, param3);
                 console.log(sql)
                 var dn = await DB.runSQLQuery(sql);
-                console.log(dn);
+
+                if (item == "products") {
+                    if (state == 1) {
+                        hp.updateProdCategoryCount("positive", sld[0].category);
+                    } else {
+                        hp.updateProdCategoryCount("negative", sld[0].category);
+                    }
+                }
+
                 if (state == '1') {
                     subj = "Updated " + name + " " + item + ", set to Active";
                 } else {
@@ -228,6 +242,9 @@ module.exports.updateStatus = async (req, res, next) => {
                 if (item == "categories") {
                     ty = "category_update";
                     item = "category";
+                } else if (item == "products") {
+                    ty = "product_update"
+                    item = "product";
                 }
                 param1 = "activities";
                 param2 = { "activity_type": ty, "category": item, "title": subj, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
@@ -887,6 +904,10 @@ module.exports.destroyItem = async (req, res, next) => {
                     });
                 }
 
+                if (item == "products") {
+                    hp.updateProdCategoryCount("negative", sld[0].category);
+                }
+
                 var sql = DB.generateDeleteSQL(param1, param2);
                 await DB.runSQLQuery(sql);
 
@@ -940,9 +961,15 @@ module.exports.getTestys = async (req, res, next) => {
             var icon = "fas fa-users";
             var title = "Testimonials"
 
-            let param1 = ["*"];
-            let param2 = "testys";
-            let param3 = "";
+            let param1 = ["id", "name"];
+            let param2 = "products";
+            let param3 = { "is_active": "1" };
+            var sql = DB.generateSelectSQL(param1, param2, param3);
+            var Prds = await DB.runSQLQuery(sql);
+
+            param1 = ["*"];
+            param2 = "testys";
+            param3 = "";
             var sql = DB.generateSelectSQL(param1, param2, param3);
             console.log(sql)
             var Testys = await DB.runSQLQuery(sql);
@@ -959,8 +986,68 @@ module.exports.getTestys = async (req, res, next) => {
             };
             sb.web = "active";
             sb.testys = "active";
-            let context = { testys: Testys, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
+            let context = { testys: Testys, prds: JSON.stringify(Prds), acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
             res.render('admin/testy', context);
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Create New Navlink Profile
+module.exports.addTesty = async (req, res, next) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = await vd.validCategory(req);
+
+            if (state) {
+                var email = req.session.username;
+                let param1 = "categories";
+                if (req.files && req.files !== undefined && req.files.link && req.files.link !== undefined && req.files.link != "") {
+                    let img = req.files.link;
+                    let ext = img.name.split(".");
+                    let new_name = uuidv4() + "." + ext[ext.length - 1];
+                    let dir = "public/img/categories/" + new_name;
+                    let db_path = "/img/categories/" + new_name;
+                    let param2 = { "name": req.body.name, "img": db_path, "is_active": '1' };
+                    let param3 = param2;
+                    var sql = DB.generateInsertSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                    img.mv(dir)
+                } else {
+                    let param2 = { "name": req.body.name, "img": "", "is_active": '1' };
+                    let param3 = param2;
+                    var sql = DB.generateInsertSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                }
+
+
+                let subj = "Created " + req.body.name + " Category";
+                param1 = "activities";
+                param2 = { "activity_type": "category_update", "title": subj, "category": "category", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
         }
         else {
             res.redirect("/auth/login");
@@ -1157,9 +1244,15 @@ module.exports.getProds = async (req, res) => {
             var icon = "fab fa-product-hunt";
             var title = "Products"
 
-            let param1 = ["*"];
-            let param2 = "products";
-            let param3 = { "is_active": "1/", "is_active>": "0" };
+            let param1 = ["id", "name"];
+            let param2 = "categories";
+            let param3 = { "is_active": "1" };
+            var sql = DB.generateSelectSQL(param1, param2, param3);
+            var Cats = await DB.runSQLQuery(sql);
+
+            param1 = ["*"];
+            param2 = "products";
+            param3 = { "is_active": "1/", "is_active>": "0" };
             var sql = DB.generateSelectSQL(param1, param2, param3);
             var Prds = await DB.runSQLQuery(sql);
 
@@ -1173,8 +1266,159 @@ module.exports.getProds = async (req, res) => {
             let sb = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" };
             sb.prd = "active"
             sb.prds = "active";
-            let context = { prds: Prds, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
+            let context = { prds: Prds, cats: JSON.stringify(Cats), acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
             res.render('admin/product', context);
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Create New Product Profile
+module.exports.addProduct = async (req, res) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = await vd.validProduct(req);
+
+            if (state) {
+                var email = req.session.username;
+                let param1 = "products";
+                if (req.files && req.files !== undefined && req.files.link && req.files.link !== undefined && req.files.link != "") {
+                    let img = req.files.link;
+                    let ext = img.name.split(".");
+                    let new_name = uuidv4() + "." + ext[ext.length - 1];
+                    let dir = "public/img/prds/" + new_name;
+                    let db_path = "/img/prds/" + new_name;
+                    let param2 = {
+                        "prod_id": blah.id, "name": req.body.name, "img": db_path,
+                        "price": req.body.price, "discount": req.body.discount,
+                        "qty": req.body.qty, "qty_name": req.body.qty_name,
+                        "variations": req.body.variation, "category": blah.cat_id,
+                        "descp": req.body.desc, "is_active": "0", "in_stock": req.body.qty,
+                        "created_by": User[0].user_id + "_" + User[0].fname + User[0].lname
+                    };
+                    let param3 = param2;
+                    var sql = DB.generateInsertSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                    img.mv(dir)
+                } else {
+                    data.error = "No Images were sent, Invalid Product";
+                    res.json(data)
+                }
+
+
+                let subj = "Created " + req.body.name + " Product";
+                param1 = "activities";
+                param2 = { "activity_type": "product_update", "title": subj, "category": "product", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Upate New Product Profile
+module.exports.editProduct = async (req, res) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = await vd.validProduct(req);
+
+            if (state) {
+                let one = ["*"];
+                let two = "products";
+                let three = { "id": req.body.ID };
+                var sql = DB.generateSelectSQL(one, two, three);
+                var exist = await DB.runSQLQuery(sql);
+
+                var email = req.session.username;
+                let param1 = "products";
+                if (req.files && req.files !== undefined && req.files.link && req.files.link !== undefined && req.files.link != "") {
+                    if (exist && exist.length > 0) {
+                        let url = path.join(__dirname, '../', 'public') + exist[0].img
+                        fs.unlink(url, function (err) {
+                            if (err) throw err;
+                            console.log('File deleted!');
+                        });
+                    }
+                    let img = req.files.link;
+                    let ext = img.name.split(".");
+                    let new_name = uuidv4() + "." + ext[ext.length - 1];
+                    let dir = "public/img/prds/" + new_name;
+                    let db_path = "/img/prds/" + new_name;
+                    let param2 = {
+                        "name": req.body.name, "img": db_path,
+                        "price": req.body.price, "discount": req.body.discount,
+                        "qty": req.body.qty, "qty_name": req.body.qty_name,
+                        "variations": req.body.variation, "category": blah.cat_id,
+                        "descp": req.body.desc, "in_stock": req.body.qty,
+                    };
+                    let param3 = { "id": req.body.ID };
+                    var sql = DB.generateUpdateSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                    img.mv(dir)
+                } else {
+                    let param1 = "products";
+                    let param2 = {
+                        "name": req.body.name, "img": exist[0].img,
+                        "price": req.body.price, "discount": req.body.discount,
+                        "qty": req.body.qty, "qty_name": req.body.qty_name,
+                        "variations": req.body.variation, "category": blah.cat_id,
+                        "descp": req.body.des, "in_stock": req.body.qty,
+                    };
+                    let param3 = { "id": req.body.ID };
+                    var sql = DB.generateUpdateSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                }
+
+
+                let subj = "Updated " + req.body.name + " Product";
+                param1 = "activities";
+                param2 = { "activity_type": "product_update", "title": subj, "category": "product", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
         }
         else {
             res.redirect("/auth/login");

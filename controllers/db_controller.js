@@ -52,49 +52,57 @@ module.exports.generateSelectSQL = (param1, param2, param3, param4 = "") => {
     let what = param1.join();
     let from = param2;
     let obj = param3
-    let where = '(';
-    if (obj && obj != "") {
-        // console.log(obj);
-        Object.keys(obj).forEach(function (key) {
-            j = obj[key]
-            console.log(j)
-            if (key[key.length -1] == ">") {
-                key = key.slice(0, -1);
-            }
-            if (j[j.length - 1] == '&') {
-                const val = j.slice(0, -1)
-                where = where + key + " = '" + val + "') AND (";
-            }
-            else if (j[j.length - 1] == '/') {
-                const val = j.slice(0, -1)
-                where = where + key + " = '" + val + "') OR (";
-            }
-            else if (j[j.length - 1] == '&' && j[0] == '!') {
-                const val = j.slice(1, -1)
-                where = where + key + " != '" + val + "') AND (";
-            }
-            else if (j[j.length - 1] == '/' && j[0] == '!') {
-                const val = j.slice(1, -1)
-                where = where + key + " != '" + val + "') OR (";
-            }
-            else if (j[0] == '!') {
-                const val = j.slice(1, -1)
-                where = where + key + " != '" + val + "')";
-            }
-            else {
-                where = where + key + " = '" + j + "')";
-            }
-        });
-    }
 
-    if (obj && obj != "") {
-
-        if (param4 && param4 != "") {
-            return "SELECT " + what + " FROM " + from + " WHERE " + where + " " + param4;
+    if (Object.keys(obj).length > 0) {
+        let where = '(';
+        if (obj && obj != "") {
+            // console.log(obj);
+            Object.keys(obj).forEach(function (key) {
+                j = obj[key]
+                console.log(j)
+                if (key[key.length - 1] == ">") {
+                    key = key.slice(0, -1);
+                }
+                if (j[j.length - 1] == '&') {
+                    const val = j.slice(0, -1)
+                    where = where + key + " = '" + val + "') AND (";
+                }
+                else if (j[j.length - 1] == '/') {
+                    const val = j.slice(0, -1)
+                    where = where + key + " = '" + val + "') OR (";
+                }
+                else if (j[j.length - 1] == '&' && j[0] == '!') {
+                    const val = j.slice(1, -1)
+                    where = where + key + " != '" + val + "') AND (";
+                }
+                else if (j[j.length - 1] == '/' && j[0] == '!') {
+                    const val = j.slice(1, -1)
+                    where = where + key + " != '" + val + "') OR (";
+                }
+                else if (j[0] == '!') {
+                    const val = j.slice(1, -1)
+                    where = where + key + " != '" + val + "')";
+                }
+                else {
+                    where = where + key + " = '" + j + "')";
+                }
+            });
         }
-        return "SELECT " + what + " FROM " + from + " WHERE " + where;
-    }
-    else {
+
+        if (obj && obj != "") {
+
+            if (param4 && param4 != "") {
+                return "SELECT " + what + " FROM " + from + " WHERE " + where + " " + param4;
+            }
+            return "SELECT " + what + " FROM " + from + " WHERE " + where;
+        }
+        else {
+            if (param4 && param4 != "") {
+                return "SELECT " + what + " FROM " + from + " " + param4;
+            }
+            return "SELECT " + what + " FROM " + from;
+        }
+    } else {
         if (param4 && param4 != "") {
             return "SELECT " + what + " FROM " + from + " " + param4;
         }

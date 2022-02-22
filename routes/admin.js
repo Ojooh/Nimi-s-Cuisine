@@ -13,7 +13,7 @@ router.get('/navbar-links', adminHandler.getNavLinks);
 router.post('/navbar-links', adminHandler.createNavLinks);
 
 /* POST NavBar Link Profile Status. */
-router.post('/item/status', adminHandler.updateStatus);
+router.post('/item/status', adminHandler.updateItemStatus);
 
 /* POST NavBar Link Profile Edit. */
 router.post('/navbar-link/edit', adminHandler.updateNavLinkProfile);
@@ -54,6 +54,9 @@ router.post('/item/delete', adminHandler.destroyItem);
 /* GET Testimonials page. */
 router.get('/testimonials', adminHandler.getTestys);
 
+/* POST add Testimonial */
+router.post('/add_comment', adminHandler.addTesty);
+
 
 /* GET Categories page. */
 router.get('/categories', adminHandler.getProdCategories);
@@ -66,6 +69,12 @@ router.post('/edit_category', adminHandler.editCategory);
 
 /* GET Categories page. */
 router.get('/products', adminHandler.getProds);
+
+/* POST add Category */
+router.post('/add_product', adminHandler.addProduct);
+
+/* POST add Category */
+router.post('/edit_product', adminHandler.editProduct);
 
 
 

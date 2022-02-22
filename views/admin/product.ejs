@@ -20,7 +20,7 @@
                                 <!-- Add Button Modal-->
                                 <div class="row">
                                     <div class="col-12">
-                                        <div id="categoryMdl" class="float-left my-4">
+                                        <div id="productMdl" class="float-left my-4" data-cats="<%= cats; %>">
                                             <a href="#" class="btn btn-outline-nm">
                                                 <i class="fas fa-plus"></i>
                                                 Add New Product
@@ -41,7 +41,7 @@
                                             <% if (prds && prds.length> 0) { %>
                                                 <div class="list-wrapper pt-2">
                                                     <ul class="todo-list todo-list-custom">
-                                                    <% for (var t=0; t < prds.length; t++) { %>
+                                                    <% for (var p=0; p < prds.length; p++) { %>
                                                         <li>
                                                             <div class="cat-img">
                                                             <% if (prds[p].img && prds[p].img !='' ) { %>
@@ -62,7 +62,7 @@
                                                                 </div>
 
                                                                 <div class="icons-right float-left">
-                                                                    <i class="edit far fa-edit" data-id="<%= prds[p].id %>" data-name="<%= prds[p].name %>" data-link="<%= prds[p].img %>"></i>
+                                                                    <i class="edit far fa-edit" data-id="<%= prds[p].id %>" data-about="<%= prds[p].name+ '*' +prds[p].img+ '*' +prds[p].price+ '*' +prds[p].discount+ '*' +prds[p].qty+ '*' +prds[p].qty_name+ '*' +prds[p].variations + '*' + prds[p].category + '*' + prds[p].descp + '*' +  prds[p].prod_id%>"></i>
                                                                     <i class="remove fas fa-times" data-id="<%= prds[p].id %>" data-name="<%= prds[p].name %>"></i>
                                                                 </div>
 
@@ -101,6 +101,9 @@
     <script src="/js/custom/design.js"></script>
     <script type="module" src="/js/custom/validator.js"></script>
     <script type="module" src="/js/custom/helper.js"></script>
-    <script type="module" src="/js/custom/script_6.js"></script>
+    <script type="module" src="/js/custom/script_7.js"></script>
+    <script>
+        
+    </script>
 
     </html>

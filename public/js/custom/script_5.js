@@ -1,22 +1,122 @@
-import { swalShowError, swalShowLoading, validateName, isUrlValid } from './helper.js';
+import { swalShowError, swalShowLoading, validateName, isEmpty, isUrlValid } from './helper.js';
 
 jQuery(document).ready(function ($) {
     var testyMdl = $("#testyMdl");
-    var mdl = $("#testyModal")
     var errorClass = "swal2-validation-message";
     var active = $(".active");
     var edit = $(".edit");
     var remove = $(".remove");
 
+    function setPrdOptions(options, category = null) {
+        console.log(category)
+        let data = JSON.parse(options);
+
+        let opt = "";
+
+        for (var o = 0; o < data.length; o++) {
+            if (category != null && parseInt(data[o].id) == parseInt(category)) {
+                opt += "<option value='" + data[o].id + "' selected>" + data[o].name + "</option>";
+            } else {
+                opt += "<option value='" + data[o].id + "'>" + data[o].name + "</option>";
+            }
+        }
+        console.log(opt);
+        return opt;
+    }
+
 
     testyMdl.on("click", async function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $("input").val("");
-        $("textarea").val("");
-        $(".modal-title").html("Add Testimonial");
-        console.log("here");
-        mdl.modal("show");
+
+        let product, name, title, msg = "";
+        let prdOptions = setPrdOptions($(this).attr("data-prd"));
+
+        Swal.fire({
+            title: 'Create New Testimonial',
+            html:
+                '<label for="swal-input1"> Testimonial For </label>' +
+                '<select id="swal-input1" class="swal2-input form-control"><option value="">Select One</option><option value="0">General</option>' + prdOptions + '</select></div>' +
+                '<label for="swal-input2"> Full Name </label>' +
+                '<input id="swal-input2" class="swal2-input" type="text">' +
+                '<label for="swal-input3"> Profession </label>' +
+                '<input id="swal-input3" class="swal2-input" type="text">' +
+                '<div class="col-md-12"><label for="swal-input4"> Message </label>' +
+                '<textarea id="swal-input4" row="8" style="height : 180px;" class="swal2-input"></textarea>' +
+                '</div',
+            focusConfirm: false,
+            showCancelButton: true,
+            showLoaderOnConfirm: true,
+            allowOutsideClick: false,
+            preConfirm: () => {
+                let state1, state2 = false;
+                var producty = $('swal-input1').val();
+                var namey = $('swal-input2').val();
+                var titley = $('swal-input3').val();
+                var msgy = $('swal-input4').val();
+
+                state1 = validateName(namey);
+                state2 = validateName(titley)
+
+                if (isEmpty(producty)) {
+                    swalShowError("Testimonial For Input is not valid", errorClass);
+                }
+                else if (isEmpty(namey) || !state1) {
+                    swalShowError("Full Name input is not valid", errorClass);
+                }
+                else if (!isEmpty(titley) && !state2) {
+                    swalShowError("Profession input is not valid", errorClass);
+                }
+                else if (isEmpty(msgy)) {
+                    swalShowError("Message input is not valid", errorClass);
+                }
+                else {
+                    return [producty, namey, titley, msgy];
+                }
+            },
+        }).then(function (result) {
+            product = result.value[0];
+            name = result.value[1];
+            title = result.value[2];
+            msg = result.value[3];
+            let url = "/admin/add_comment";
+            let param = { url: url };
+            let data = new FormData
+
+            data.append("product", product);
+            data.append("name", name);
+            data.append("title", title);
+            data.append("msg", msg);
+            data.append("type", "add");
+
+            param.data = data;
+            param.type = "post";
+            // param.contentType = false;
+            // param.processData = false;
+            // console.log(data)
+            param.beforeSend = function () {
+                swalShowLoading("Creating New Testimonial", "Please wait, while Testimonial is being created")
+            };
+            param.success = function (data) {
+                if (data.success) {
+                    Swal.fire(data.success, "Click OK to proceed", "success").then(
+                        function () {
+                            location.reload();
+                        }
+                    )
+                }
+                else {
+                    swal.close();
+                    Swal.fire(data.error, "Click OK to proceed", "error").then(
+                        function () {
+                            location.reload();
+                        }
+                    )
+                }
+
+            };
+
+            $.ajax(param);
+        });
+
     });
 
     active.on("change", function (e) {

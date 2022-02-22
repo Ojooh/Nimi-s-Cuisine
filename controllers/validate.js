@@ -72,14 +72,11 @@ module.exports.validNavLinkName = (req,) => {
 };
 
 module.exports.validCategory = (req,) => {
-    console.log(req.body)
-    console.log(req.query)
 
     if (helper.isEmpty(req.body.name) || (helper.validateNamey(req.body.name) == false)) {
         return [null, false, { message: 'Category Name Input is not Valid' }];
     }
     else if ((req.files && helper.isImage(req.files.link) == false)) {
-        console.log(helper.isImage(req.files.link));
         return [null, false, { message: 'File Sent is not an Image' }];
     }
     else {
@@ -93,4 +90,45 @@ module.exports.validCategory = (req,) => {
 
 
 };
+
+module.exports.validProduct = async (req) => {
+    let cat_id = await helper.validateCategory(req.body.category, req.body.type);
+    if (helper.isEmpty(req.body.name) || (helper.validateNamey(req.body.name) == false)) {
+        return [null, false, { message: 'Product Name Input is not Valid' }];
+    }
+    else if ((req.files && helper.isImage(req.files.link) == false)) {
+        return [null, false, { message: 'File Sent is not an Image' }];
+    }
+    else if ((helper.isEmpty(req.body.qty) || helper.validInteger(req.body.qty) == false)) {
+        console.log(helper.isImage(req.files.link));
+        return [null, false, { message: 'Product Quantity Input is not an Valid' }];
+    }
+    else if ((helper.isEmpty(req.body.qty_name) || helper.validateName(req.body.qty_name) == false)) {
+        return [null, false, { message: 'Product Quantity Name Input is not Valid' }];
+    }
+    else if ((helper.isEmpty(req.body.qty_price) || helper.validFloat(req.body.price) == false)) {
+        return [null, false, { message: 'Product Price Input is not Valid' }];
+    }
+    else if ((!helper.isEmpty(req.body.discount) && helper.validFloat(req.body.discount) == false)) {
+        return [null, false, { message: 'Product Discount Input is not Valid' }];
+    }
+    else if ((!helper.isEmpty(req.body.variation) && req.body.variation.split(",").length <= 0)) {
+        return [null, false, { message: 'Product Variation Input is not Valid, seperate variations with a comma' }];
+    }
+    else if ((helper.isEmpty(req.body.category) || cat_id == false)) {
+        return [null, false, { message: 'Product Category Input is not Valid' }];
+    }
+    else if ((helper.isEmpty(req.body.desc))) {
+        return [null, false, { message: 'Product Description Input is not Valid' }];
+    }
+    else {
+        req.body.name = helper.sentenceCase(req.body.name);
+        let msg = req.body.name + ' Product Profile Created successfully'
+        if (req.body.type != "add") {
+            msg = req.body.name + ' Product Profile Updated successfully'
+        }
+        let extra = { id: await helper.generateUID("PRD", "products", 4), cat_id: cat_id }
+        return [extra, true, { message: msg }];
+    }
+}
 

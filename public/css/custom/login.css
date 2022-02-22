@@ -64,7 +64,7 @@ html {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   padding: 70px 30px;
-  border-radius: 10%;
+  border-radius: 10px;
   position: relative;
 }
 

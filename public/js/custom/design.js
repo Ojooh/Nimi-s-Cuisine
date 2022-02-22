@@ -92,5 +92,7 @@ $(document).ready(function () {
             $(this).removeClass("fa-angle-down");
             $(this).addClass("fa-angle-up");
         }
-    })
+    });
+
+   
 });
