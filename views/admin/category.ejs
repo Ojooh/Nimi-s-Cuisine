@@ -43,27 +43,41 @@
                                             <ul class="todo-list todo-list-custom">
                                                 <% for (var t=0; t < cats.length; t++) { %>
                                                     <li>
-                                                        <div class="cat-img">
-                                                        <% if (cats[t].img && cats[t].img != '') { %>
-                                                            <img class="img-fluid" src="<%= cats[t].img %>"  />
-                                                        <% } else { %>
-                                                            <img class="img-fluid" src="/img/categories/default.png" />
-                                                        <% } %>
+                                                        <div class="row w-100">
+                                                            <div class="col-md-4 p-0">
+                                                                <div class="cat-img">
+                                                                <% if (cats[t].img && cats[t].img !='' ) { %>
+                                                                    <img class="img-fluid" src="<%= cats[t].img %>" />
+                                                                <% } else { %>
+                                                                    <img class="img-fluid" src="/img/categories/default.png" />
+                                                                <% } %>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 p-0">
+                                                                <div class="form-check form-check-flat">
+                                                                    <label class="form-check-label">
+                                                                    <% if (cats[t].is_active=='1' ) { %>
+                                                                        <input class="checkbox active" value="0" id="<%= cats[t].id %>" data-name="<%= cats[t].name %>"
+                                                                                type="checkbox" checked>
+                                                                    <% } else { %>
+                                                                        <input class="checkbox active" value="1" id="<%= cats[t].id %>" data-name="<%= cats[t].name %>"
+                                                                                    type="checkbox">
+                                                                    <% } %>
+                                                                        <%= cats[t].name %> <i class="input-helper"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2 p-0">
+                                                                <div class="icons-right float-left">
+                                                                    <i class="edit far fa-edit" data-id="<%= cats[t].id %>" data-name="<%= cats[t].name %>"
+                                                                        data-link="<%= cats[t].img %>"></i>
+                                                                    <i class="remove fas fa-times" data-id="<%= cats[t].id %>" data-name="<%= cats[t].name %>"></i>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="form-check form-check-flat">
-                                                            <label class="form-check-label">
-                                                            <% if (cats[t].is_active=='1' ) { %>
-                                                                <input class="checkbox active" value="0" id="<%= cats[t].id %>" data-name="<%= cats[t].name %>" type="checkbox" checked>
-                                                            <% } else { %>
-                                                                <input class="checkbox active" value="1" id="<%= cats[t].id %>" data-name="<%= cats[t].name %>" type="checkbox">
-                                                            <% } %>
-                                                                <%= cats[t].name %> <i class="input-helper"></i>
-                                                            </label>
-                                                        </div>
-                                                        <div class="icons-right float-left">
-                                                            <i class="edit far fa-edit" data-id="<%= cats[t].id %>" data-name="<%= cats[t].name %>" data-link="<%= cats[t].img %>"></i>
-                                                            <i class="remove fas fa-times" data-id="<%= cats[t].id %>" data-name="<%= cats[t].name %>"></i>
-                                                        </div>
+                                                        
+                                                        
+                                                        
                                                     
                                                     </li>
 
@@ -88,7 +102,7 @@
                 </div>
 
             </div>
-            <% include includes/modal_1 %>
+            
         </div>
 
     </body>

@@ -43,28 +43,42 @@
                                                     <ul class="todo-list todo-list-custom">
                                                     <% for (var p=0; p < prds.length; p++) { %>
                                                         <li>
-                                                            <div class="cat-img">
-                                                            <% if (prds[p].img && prds[p].img !='' ) { %>
-                                                                <img class="img-fluid" src="<%= prds[p].img %>" />
-                                                            <% } else { %>
-                                                            <img class="img-fluid" src="/img/prds/default.png" />
-                                                            <% } %>
-                                                            </div>
-                                                                <div class="form-check form-check-flat">
-                                                                    <label class="form-check-label">
-                                                                    <% if (prds[p].is_active=='1' ) { %>
-                                                                        <input class="checkbox active" value="0" id="<%= prds[p].id %>" data-name="<%= prds[p].name %>" type="checkbox" checked>
+                                                            <div class="row w-100">
+                                                                <div class="col-md-4 p-0">
+                                                                    <div class="cat-img">
+                                                                    <% if (prds[p].img && prds[p].img !='' ) { %>
+                                                                        <img class="img-fluid" src="<%= prds[p].img %>" />
                                                                     <% } else { %>
-                                                                        <input class="checkbox active" value="1" id="<%= prds[p].id %>" data-name="<%= prds[p].name %>" type="checkbox">
+                                                                        <img class="img-fluid" src="/img/prds/default.png" />
                                                                     <% } %>
-                                                                    <%= prds[p].name %> <i class="input-helper"></i>
-                                                                    </label>
+                                                                    </div>
                                                                 </div>
+                                                                <div class="col-md-6 p-0">
+                                                                    <div class="form-check form-check-flat">
+                                                                        <label class="form-check-label">
+                                                                        <% if (prds[p].is_active=='1' ) { %>
+                                                                            <input class="checkbox active" value="0" id="<%= prds[p].id %>" data-name="<%= prds[p].name %>"
+                                                                                    type="checkbox" checked>
+                                                                        <% } else { %>
+                                                                            <input class="checkbox active" value="1" id="<%= prds[p].id %>" data-name="<%= prds[p].name %>"
+                                                                                        type="checkbox">
+                                                                        <% } %>
+                                                                            <%= prds[p].name %> <i class="input-helper"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2 p-0">
+                                                                    <div class="icons-right float-left">
+                                                                        <i class="edit far fa-edit" data-id="<%= prds[p].id %>"
+                                                                            data-about="<%= prds[p].name+ '*' +prds[p].img+ '*' +prds[p].price+ '*' +prds[p].discount+ '*' +prds[p].qty+ '*' +prds[p].qty_name+ '*' +prds[p].variations + '*' + prds[p].category + '*' + prds[p].descp + '*' +  prds[p].prod_id%>"></i>
+                                                                        <i class="remove fas fa-times" data-id="<%= prds[p].id %>" data-name="<%= prds[p].name %>"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                                
 
-                                                                <div class="icons-right float-left">
-                                                                    <i class="edit far fa-edit" data-id="<%= prds[p].id %>" data-about="<%= prds[p].name+ '*' +prds[p].img+ '*' +prds[p].price+ '*' +prds[p].discount+ '*' +prds[p].qty+ '*' +prds[p].qty_name+ '*' +prds[p].variations + '*' + prds[p].category + '*' + prds[p].descp + '*' +  prds[p].prod_id%>"></i>
-                                                                    <i class="remove fas fa-times" data-id="<%= prds[p].id %>" data-name="<%= prds[p].name %>"></i>
-                                                                </div>
+                                                                
 
                                                         </li>
                                                     <% } %>
@@ -89,7 +103,7 @@
                         </div>
 
                     </div>
-                    <% include includes/modal_1 %>
+                    
         </div>
 
     </body>

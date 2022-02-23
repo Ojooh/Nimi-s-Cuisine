@@ -1,5 +1,5 @@
 const DB = require('./db_controller');
-var helper = require("./helper");
+var vd = require("./validate");
 
 
 //Function To Render Login Page
@@ -63,5 +63,48 @@ module.exports.getHomePage = async (req, res, next) => {
 
     var context = { testys: Testys, prds: Prds, cats: Cats, sl: SLinks, txt: Txt, lnks: Links, slds: Sliders, actv: 'Home' };
     res.render('nimi/index', context);
+};
+
+//Function To Upate Testimonial
+module.exports.getShareTesty = async (req, res) => {
+    console.log(req.params.id);
+    var context = {
+        product: req.params.id
+    }
+    res.render('nimi/share', context);
+
+};
+
+//Function To Create New Testimonial
+module.exports.addTesty = async (req, res, next) => {
+    let data = {};
+    var [blah, state, msg] = await vd.validTesty(req);
+
+    if (state) {
+        let param1 = "testys";
+        let param2 = {
+            "name": req.body.name, "title": req.body.title,
+            "message": req.body.msg, "product": req.body.product,
+            "is_active": '0'
+        };
+        let param3 = param2;
+        var sql = DB.generateInsertSQL(param1, param2, param3);
+        console.log(sql);
+        await DB.runSQLQuery(sql);
+
+
+        let subj = "Created " + req.body.name + " Testimonial";
+        param1 = "activities";
+        param2 = { "activity_type": "website_update", "title": subj, "category": "testy", "activity_by": req.body.name };
+        param3 = param2;
+        var sql = DB.generateInsertSQL(param1, param2, param3);
+        await DB.runSQLQuery(sql);
+
+        data.success = msg.message;
+        res.json(data)
+    } else {
+        data.error = msg.message;
+        res.json(data)
+    }
 };
 

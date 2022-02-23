@@ -51,7 +51,23 @@
                                         <ul class="todo-list todo-list-custom">
                                         <% for (var t=0; t < testys.length; t++) { %>
                                             <li>
-                                                
+                                                <div class="form-check form-check-flat">
+                                                    <label class="form-check-label">
+                                                        <% if (testys[t].is_active=='1' ) { %>
+                                                        <input class="checkbox active" value="0" id="<%= testys[t].id %>" data-name="<%= testys[t].name %>"
+                                                            type="checkbox" checked>
+                                                        <% } else { %>
+                                                            <input class="checkbox active" value="1" id="<%= testys[t].id %>" data-name="<%= testys[t].name %>"
+                                                                type="checkbox">
+                                                        <% } %>
+                                                            <%= testys[t].name %>
+                                                            <i class="input-helper"></i>
+                                                    </label>
+                                                </div>
+                                                <div class="icons-right float-left">
+                                                    <i class="edit far fa-edit" data-id="<%= testys[t].id %>" data-about="<%= testys[t].product+ '*' +testys[t].name+ '*' +testys[t].title+ '*' +testys[t].message %>"></i>
+                                                    <i class="remove fas fa-times" data-id="<%= testys[t].id %>" data-name="<%= testys[t].name %>"></i>
+                                                </div>
                                             </li>
 
                                         <% } %>

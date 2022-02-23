@@ -130,5 +130,31 @@ module.exports.validProduct = async (req) => {
         let extra = { id: await helper.generateUID("PRD", "products", 4), cat_id: cat_id }
         return [extra, true, { message: msg }];
     }
+};
+
+module.exports.validTesty = async (req) => {
+    let prd_id = await helper.validateProduct(req.body.product);
+    console.log(req.body.product);
+    if (helper.isEmpty(req.body.name) || (helper.validateName(req.body.name) == false)) {
+        return [null, false, { message: 'Full Name Input is not Valid' }];
+    }
+    else if ((!helper.isEmpty(req.body.title) && helper.validateName(req.body.title) == false)) {
+        return [null, false, { message: 'Proffession Input is not an Valid' }];
+    }
+    else if ((helper.isEmpty(req.body.msg))) {
+        return [null, false, { message: 'Message Input is not Valid' }];
+    }
+    else if ((helper.isEmpty(req.body.product) || prd_id == false)) {
+        return [null, false, { message: 'Testimonial For Input is not Valid' }];
+    }
+    else {
+        req.body.name = helper.sentenceCase(req.body.name);
+        req.body.title = helper.sentenceCase(req.body.title);
+        let msg = req.body.name + ' Testimonial Created successfully'
+        if (req.body.type != "add") {
+            msg = req.body.name + ' Testimonial Updated successfully'
+        }
+        return [{}, true, { message: msg }];
+    }
 }
 

@@ -1078,7 +1078,7 @@ a.text-primary:hover {
 
 .testimonial-card {
   width: 99%;
-  height: 314px;
+  height: 334px;
   padding: 20px 10px;
   border: 1px solid black;
   border-radius: 20px;
@@ -1112,8 +1112,13 @@ a.text-primary:hover {
 
   .testimonial-footer {
     height: 70px;
+
     padding: 30px 10px 20px 10px;
     text-align: center;
+
+    small {
+      color: #ff5200;
+    }
   }
 }
 

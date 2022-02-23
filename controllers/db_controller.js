@@ -54,7 +54,7 @@ module.exports.generateSelectSQL = (param1, param2, param3, param4 = "") => {
     let obj = param3
 
     if (Object.keys(obj).length > 0) {
-        let where = '(';
+        let where = `(`;
         if (obj && obj != "") {
             // console.log(obj);
             Object.keys(obj).forEach(function (key) {
@@ -63,7 +63,7 @@ module.exports.generateSelectSQL = (param1, param2, param3, param4 = "") => {
                 if (key[key.length - 1] == ">") {
                     key = key.slice(0, -1);
                 }
-                if (j[j.length - 1] == '&') {
+                if (j[j.length - 1] == `&`) {
                     const val = j.slice(0, -1)
                     where = where + key + " = '" + val + "') AND (";
                 }
@@ -118,7 +118,7 @@ module.exports.generateUpdateSQL = (param1, param2, param3) => {
 
     Object.keys(obj).forEach(function (key) {
         j = obj[key];
-        set = set + key + " = '" + j + "',";
+        set = set + key + ' = "' + j + '",';
     });
     set = set.slice(0, -1);
 
@@ -126,14 +126,14 @@ module.exports.generateUpdateSQL = (param1, param2, param3) => {
         j = param3[key];
         if (j[j.length - 1] == '&') {
             var val = j.slice(0, -1);
-            where = where + key + " = '" + val + "') AND (";
+            where = where + key + ' = "' + val + '") AND (';
         }
         else if (j[j.length - 1] == '/') {
             var val = j.slice(0, -1);
-            where = where + key + " = '" + val + "') OR (";
+            where = where + key + ' = "' + val + '") OR (';
         }
         else {
-            where = where + key + " = '" + j + "')";
+            where = where + key + ' = "' + j + '")';
         }
     });
 
@@ -153,7 +153,7 @@ module.exports.generateInsertSQL = (param1, param2, param3) => {
 
     Object.keys(param3).forEach(function (key) {
         j = param3[key];
-        value = value + "'" + j + "', ";
+        value = value + '"' + j + '", ';
     });
 
     value = value.slice(0, - 2) + ")";

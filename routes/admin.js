@@ -57,6 +57,11 @@ router.get('/testimonials', adminHandler.getTestys);
 /* POST add Testimonial */
 router.post('/add_comment', adminHandler.addTesty);
 
+/* POST add Testimonial */
+router.post('/edit_comment', adminHandler.editTesty);
+
+
+
 
 /* GET Categories page. */
 router.get('/categories', adminHandler.getProdCategories);
@@ -75,6 +80,16 @@ router.post('/add_product', adminHandler.addProduct);
 
 /* POST add Category */
 router.post('/edit_product', adminHandler.editProduct);
+
+/* GET Categories page. */
+router.get('/gallery', adminHandler.getGallery);
+
+// /* POST add Category */
+// router.post('/add_product', adminHandler.addProduct);
+
+// /* POST add Category */
+// router.post('/edit_product', adminHandler.editProduct);
+
 
 
 

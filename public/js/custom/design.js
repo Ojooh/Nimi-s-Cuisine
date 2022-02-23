@@ -85,7 +85,7 @@ $(document).ready(function () {
         $(key).toggleClass("deactivated");
         console.log($(key));
 
-        if ($(this).next(".sub-links").hasClass("deactivated")) {
+        if ($(key).hasClass("deactivated")) {
             $(this).removeClass("fa-angle-up");
             caret.addClass("fa-angle-down");
         } else {
@@ -94,5 +94,5 @@ $(document).ready(function () {
         }
     });
 
-   
+
 });

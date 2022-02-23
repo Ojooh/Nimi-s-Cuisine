@@ -585,7 +585,7 @@ a:hover {
 }
 
 .wrapper #content .list-wrapper ul li .cat-img {
-  width: 125px;
+  width: 100%;
   height: 120px;
 }
 
@@ -601,7 +601,7 @@ a:hover {
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 100%;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .wrapper #content .list-wrapper ul .completed .form-check {

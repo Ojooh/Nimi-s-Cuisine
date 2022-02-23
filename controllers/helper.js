@@ -1,6 +1,6 @@
 
-var nameRegex = /^[A-Za-z.\s_-]*$/;
-var nameyRegex = /^[A-Za-z0-9.\s,_-]*$/;
+var nameRegex = /^[A-Za-z.\s/_-]*$/;
+var nameyRegex = /^[A-Za-z0-9.\s,/_-]*$/;
 var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 var telRegex = /^[\s()+-]*([0-9][\s()+-]*){6,20}$/;
 var passRegex = /^([a-z0-9]).{6,}$/;
@@ -313,7 +313,7 @@ module.exports.generateClassName = async (dik) => {
         console.log(pre)
         return pre + "-" + name;
     }
-}
+};
 
 module.exports.sentenceCase = (str) => {
     const arr = str.split(" ");
@@ -335,7 +335,7 @@ module.exports.validInteger = (integer) => {
         return true
     }
 
-}
+};
 
 
 module.exports.validFloat = (float) => {
@@ -346,7 +346,7 @@ module.exports.validFloat = (float) => {
         return true
     }
 
-}
+};
 
 module.exports.updateProdCategoryCount = async (side, id) => {
     let param1 = ["id", "prd_count"];
@@ -369,19 +369,42 @@ module.exports.updateProdCategoryCount = async (side, id) => {
         await DB.runSQLQuery(sql);
     }
 
-}
+};
 
-module.exports.validateCategory = async (category, type) => {
+module.exports.validateCategory = async (category) => {
     let param1 = ["id", "prd_count"];
     let param2 = "categories";
     let param3 = { "name": category };
     var sql = DB.generateSelectSQL(param1, param2, param3);
     var c = await DB.runSQLQuery(sql);
 
-    if (category.length > 0) {
+    if (c.length > 0) {
         return c[0].id;
     } else {
         return false;
     }
+};
+
+
+module.exports.validateProduct = async (prd) => {
+    if (parseInt(prd) > 0) {
+        let param1 = ["id", "name"];
+        let param2 = "products";
+        let param3 = { "id": prd };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var c = await DB.runSQLQuery(sql);
+
+        if (c.length > 0) {
+            return c[0].id;
+        } else {
+            return false;
+        }
+    } else if (parseInt(prd) == 0) {
+        return true;
+
+    } else {
+        return false;
+    }
 }
+
 
