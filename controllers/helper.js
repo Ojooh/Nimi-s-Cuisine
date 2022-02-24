@@ -385,7 +385,6 @@ module.exports.validateCategory = async (category) => {
     }
 };
 
-
 module.exports.validateProduct = async (prd) => {
     if (parseInt(prd) > 0) {
         let param1 = ["id", "name"];
@@ -405,6 +404,6 @@ module.exports.validateProduct = async (prd) => {
     } else {
         return false;
     }
-}
+};
 
 

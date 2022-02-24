@@ -1055,7 +1055,7 @@ a:hover {
   max-height: 144px;
   overflow-y: auto;
   overflow-x: hidden;
-  height: auto;
+  height: 144px;
 }
 
 .testimonial-card .testimonial-comment::-webkit-scrollbar {
@@ -1133,5 +1133,10 @@ a:hover {
 .block-testimonial .message {
   padding: 0 50px;
   font-size: 18px;
+}
+
+.gallery img {
+  width: 100% !important;
+  height: 180px !important;
 }
 /*# sourceMappingURL=nimi.css.map */

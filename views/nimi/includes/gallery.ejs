@@ -1,0 +1,12 @@
+<% if (photos && photos.length> 0) { %>
+    <div class="row">
+    <% for (var p=0; p < photos.length; p++) { %>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 gallery p-1">
+            <img src="<%= photos[p].img %>" alt="<%= photos[p].text %>" class="img-fluid" />
+        </div>
+    <% } %>
+    </div>
+    
+<% } %>
+    </div>
+</div>

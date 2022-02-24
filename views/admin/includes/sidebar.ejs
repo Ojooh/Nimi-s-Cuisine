@@ -42,13 +42,15 @@
                     <i class="fas fa-users"></i> Testimonials
                     </a>
                 </li>
-                <li>
-                    <a href="#">
+                <li class="<%= ((sidebar.gallery && sidebar.gallery !== '') ? sidebar.gallery : '')  %>">
+                    <a href="/admin/gallery">
                     <i class="far fa-images"></i> Gallery
                     </a>
                 </li>
-                <li>
-                    <a href="#">Events</a>
+                <li class="<%= ((sidebar.event && sidebar.event !== '') ? sidebar.event : '')  %>">
+                    <a href="/admin/events">
+                        <i class="fa fa-calendar" aria-hidden="true"></i> Events
+                    </a>
                 </li>
             </ul>
         </li>

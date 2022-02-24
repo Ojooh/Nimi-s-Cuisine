@@ -59,9 +59,21 @@ module.exports.getHomePage = async (req, res, next) => {
     var Testys = await DB.runSQLQuery(sql);
     // console.log(Prds)
 
+    param1 = ["*"];
+    param2 = "gallery";
+    param3 = { "is_active": "1" };
+    param4 = "LIMIT 8";
+    var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+    console.log(sql)
+    var Photos = await DB.runSQLQuery(sql);
 
 
-    var context = { testys: Testys, prds: Prds, cats: Cats, sl: SLinks, txt: Txt, lnks: Links, slds: Sliders, actv: 'Home' };
+
+    var context = {
+        photos: Photos, testys: Testys, prds: Prds,
+        cats: Cats, sl: SLinks, txt: Txt, lnks: Links,
+        slds: Sliders, actv: 'Home'
+    };
     res.render('nimi/index', context);
 };
 

@@ -60,35 +60,41 @@ router.post('/add_comment', adminHandler.addTesty);
 /* POST add Testimonial */
 router.post('/edit_comment', adminHandler.editTesty);
 
-
-
-
 /* GET Categories page. */
 router.get('/categories', adminHandler.getProdCategories);
 
 /* POST add Category */
 router.post('/add_category', adminHandler.addCategory);
 
-/* POST add Category */
+/* POST edit Category */
 router.post('/edit_category', adminHandler.editCategory);
 
-/* GET Categories page. */
+/* GET Products page. */
 router.get('/products', adminHandler.getProds);
 
-/* POST add Category */
+/* POST add Product */
 router.post('/add_product', adminHandler.addProduct);
 
-/* POST add Category */
+/* POST edit Product */
 router.post('/edit_product', adminHandler.editProduct);
 
-/* GET Categories page. */
+/* GET Gallery page. */
 router.get('/gallery', adminHandler.getGallery);
 
-// /* POST add Category */
-// router.post('/add_product', adminHandler.addProduct);
+/* POST add Photo */
+router.post('/add_photo', adminHandler.addPhoto);
 
-// /* POST add Category */
-// router.post('/edit_product', adminHandler.editProduct);
+/* POST edit Photo */
+router.post('/edit_photo', adminHandler.editPhoto);
+
+/* GET Events page. */
+router.get('/events', adminHandler.getEvents);
+
+// /* POST add Events */
+// router.post('/add_event', adminHandler.addEvent);
+
+// /* POST edit Phto */
+// router.post('/edit_event', adminHandler.editEvent);
 
 
 

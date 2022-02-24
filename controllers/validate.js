@@ -156,5 +156,23 @@ module.exports.validTesty = async (req) => {
         }
         return [{}, true, { message: msg }];
     }
-}
+};
+
+module.exports.validPhoto = async (req) => {
+    if (helper.isEmpty(req.body.name) || (helper.validateNamey(req.body.name) == false)) {
+        return [null, false, { message: 'Photo Text Input is not Valid' }];
+    }
+    else if ((req.files && helper.isImage(req.files.link) == false)) {
+        return [null, false, { message: 'File Sent is not an Image' }];
+    }
+    else {
+        req.body.name = helper.sentenceCase(req.body.name);
+        let msg = req.body.name + ' Photo Profile Created successfully'
+        if (req.body.type != "add") {
+            msg = req.body.name + ' Photo Profile Updated successfully'
+        }
+        let extra = {}
+        return [extra, true, { message: msg }];
+    }
+};
 

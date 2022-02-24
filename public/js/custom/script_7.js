@@ -253,7 +253,7 @@ jQuery(document).ready(function ($) {
 
     active.on("change", function (e) {
         let url = "/admin/item/status";
-        let data = { "item": "products", "name": $(this).attr("data-name"), "state": $(this).val(), "ID": $(this).attr("id") };
+        let data = { extra: "product", "item": "products", "name": $(this).attr("data-name"), "state": $(this).val(), "ID": $(this).attr("id") };
 
         $.ajax({
             url: url,

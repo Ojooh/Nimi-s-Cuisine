@@ -1,0 +1,111 @@
+<% include includes/head %>
+
+<body>
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <% include includes/sidebar %>
+        <!-- Sidebar End -->
+
+        <!-- Top Bar -->
+        <% include includes/topbar %>
+        <!-- Top Bar End -->
+
+        <!-- Page Content  -->
+        <div id="content">
+            <div class="container-fluid">
+            <!-- Page Title Row -->
+            <% include includes/pageTitle %>
+            <!-- Page Title Row End -->
+
+            <!-- Add Button Modal-->
+            <div class="row">
+                <div class="col-12">
+                    <div id="addEventMdl" class="float-left my-4">
+                        <a href="#" class="btn btn-outline-nm">
+                            <i class="fas fa-plus"></i>
+                            Add An Event
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- End Add Button Modal-->
+
+            <!-- Page Content Row -->
+            <div class="row">
+                <div class="col-md-8 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title text-center">Events</h4>
+                        </div>
+                        <div class="card-body">
+                        <% if (evs && evs.length> 0) { %>
+                            <div class="list-wrapper pt-2">
+                                <ul class="todo-list todo-list-custom">
+                                <% for (var e=0; e < evs.length; e++) { %>
+                                    <li>
+                                        <div class="row w-100">
+                                            <div class="col-md-4 p-0">
+                                                <div class="cat-img">
+                                                    <% if (evs[e].img && evs[e].img !='' ) { %>
+                                                        <img class="img-fluid" src="<%= evs[e].img %>" />
+                                                    <% } else { %>
+                                                        <img class="img-fluid" src="/img/prds/default.png" />
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 p-0">
+                                                <div class="form-check form-check-flat">
+                                                    <label class="form-check-label">
+                                                    <% if (evs[e].is_active=='1' ) { %>
+                                                        <input class="checkbox active" value="0" id="<%= evs[e].id %>"
+                                                                data-name="<%= evs[e].name %>" type="checkbox" checked>
+                                                    <% } else { %>
+                                                        <input class="checkbox active" value="1" id="<%= evs[e].id %>"
+                                                                    data-name="<%= evs[e].title %>" type="checkbox">
+                                                    <% } %>
+                                                        <%= evs[e].title %> <i class="input-helper"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 p-0">
+                                                <div class="icons-right float-left">
+                                                    <i class="edit far fa-edit" data-id="<%= evs[e].id %>"
+                                                        data-about="<%= evs[e].title + '*' +evs[e].img+ '*' +evs[e].descp %>"></i>
+                                                    <i class="remove fas fa-times" data-id="<%= evs[e].id %>"
+                                                        data-name="<%= evs[e].title %>"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                <% } %>
+                                </ul>
+                            </div>
+                        <% } else { %>
+                        
+                            <div class="text-danger text-center alert alert-success d-flex w-100">
+                                No Events Available
+                            </div>
+                        
+                        <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <% include includes/activities %>
+            </div>
+            <!-- Page Content Row -->
+        </div>
+
+        </div>
+    </div>
+</body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/custom/design.js"></script>
+    <script type="module" src="/js/custom/validator.js"></script>
+    <script type="module" src="/js/custom/helper.js"></script>
+    <script type="module" src="/js/custom/script_8.js"></script>
+
+</html>

@@ -1095,7 +1095,7 @@ a.text-primary:hover {
     max-height: 144px;
     overflow-y: auto;
     overflow-x: hidden;
-    height: auto;
+    height: 144px;
     &::-webkit-scrollbar {
       width: 5px;
     }
@@ -1169,4 +1169,11 @@ a.text-primary:hover {
 .block-testimonial .message {
   padding: 0 50px;
   font-size: 18px;
+}
+
+.gallery {
+  img {
+    width: 100% !important;
+    height: 180px !important;
+  }
 }
