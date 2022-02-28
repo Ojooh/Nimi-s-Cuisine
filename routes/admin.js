@@ -90,11 +90,11 @@ router.post('/edit_photo', adminHandler.editPhoto);
 /* GET Events page. */
 router.get('/events', adminHandler.getEvents);
 
-// /* POST add Events */
-// router.post('/add_event', adminHandler.addEvent);
+/* POST add Events */
+router.post('/add_event', adminHandler.addEvent);
 
-// /* POST edit Phto */
-// router.post('/edit_event', adminHandler.editEvent);
+/* POST edit Phto */
+router.post('/edit_event', adminHandler.editEvent);
 
 
 

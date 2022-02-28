@@ -21,7 +21,7 @@
             <% for (var l=0; l < lnks.length; l++) { var par = lnks[l].id %>
                 <% if (lnks[l].parent==0) { %>
                 <li class="<%= (( lnks[l].name == actv) ? 'active' : actv) %> <%= (( lnks[l].children == '1') ? 'has-children' : '') %>">
-                    <a href="index.html">
+                    <a href="<%= lnks[l].link %>">
                        <%= lnks[l].name %>
 
                         <% if (lnks[l].children == '1') { %>

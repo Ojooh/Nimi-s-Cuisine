@@ -1,0 +1,98 @@
+<footer id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="widget">
+                    <h3>About Meal<span class="text-primary">.</span> </h3>
+                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
+                        live the blind texts.</p>
+                </div>
+                <div class="widget">
+                    <h3>Connect</h3>
+                    <%if (sl && sl.length> 0) { %>
+                    <ul class="list-unstyled social">
+                        <% for (var v=0; v < sl.length; v++) { %>
+                            <li><a href="<%= sl[v].link %>" target="blank"><i class="<%= sl[v].class %>"></i></a></li>
+                        <% } %>
+                    </ul>
+                    <% } %>
+                </div>
+            </div>
+            <!-- <div class="col-lg-2 ml-auto">
+                <div class="widget">
+                    <h3>Projects</h3>
+                    <ul class="list-unstyled float-left links">
+                        <li><a href="#">Begirir</a></li>
+                        <li><a href="#">Ewedu</a></li>
+                        <li><a href="#">Obono</a></li>
+                        <li><a href="#">Obono</a></li>
+                    </ul>
+                </div>
+            </div> -->
+
+            <div class="col-lg-2 ml-auto">
+                <div class="widget">
+                    <h3>Contact</h3>
+                    <address>43 Raymouth Rd. Baltemoer, London 3910</address>
+                    <ul class="list-unstyled links mb-4">
+                        <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
+                        <li><a href="tel://11234567890">+1(123)-456-7890</a></li>
+                        <li>
+                            <a href="mail-to:info@nimiscusine.com">
+                                <span class=""">
+                                    info@nimiscusine.com
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-2">
+                <div class="widget">
+                    <h3>Services</h3>
+                    <ul class="list-unstyled links">
+                        <li><a href="/products">Products</a></li>
+                        <li><a href="/careers">Careres</a></li>
+                    <%if (cats && cats.length> 0) { %>
+                    <% for (var n=0; n < cats.length; n++) { %>
+                        <li><a href="/<%= cats[n].name %>"><%= cats[n].name %></a></li>
+                    <% } %>
+                    <% } %>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="widget">
+                    <h3>Newsletter</h3>
+                    <p>
+                        Get regular updates on nimi's kitchen.
+                    </p>
+                    <ul class="list-unstyled links mb-4">
+                        <li>
+                            <input class="form-control nws-letter" type="email" />
+                        </li>
+                        <li>
+                            <a href="#" class="btn btn-primary text-white">Subscribe</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+        </div>
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <p>
+    
+                    Copyright &copy;
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script> All rights reserved | created by <a href="https://github.com/Ojooh"
+                        target="_blank">Ojooh</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</footer>

@@ -64,35 +64,40 @@
                     </div>
                     <div class="col-md-6 grid-margin transparent">
                         <div class="row">
+                        <% if (cTot && cTot.length > 0 ) { %>
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                 <div class="card card-tale">
                                     <div class="card-body">
-                                        <p class="mb-2">Today’s Bookings</p>
-                                        <p class="fs-30 mb-0">4006</p>
-                                        <p>10.00% (30 days)</p>
+                                        <p class="mb-2">Customers</p>
+                                        <p class="fs-30 mb-0"><%= cTot[0].total; %></p>
                                     </div>
                                 </div>
                             </div>
+                        <% } %>
+                        <% if (uTot && uTot.length> 0 ) { %>
                             <div class="col-md-6 mb-4 stretch-card transparent">
-                                <div class="card card-dark-blue">
+                                <div class="card card-tale">
                                     <div class="card-body">
-                                        <p class="mb-2">Total Bookings</p>
-                                        <p class="fs-30 mb-0">61344</p>
-                                        <p>22.00% (30 days)</p>
+                                        <p class="mb-2">Administrators</p>
+                                        <p class="fs-30 mb-0"><%= uTot[0].total; %></p>
                                     </div>
                                 </div>
                             </div>
+                        <% } %>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 stretch-card transparent">
-                                <div class="card card-light-blue">
+                        <% if (prdTot && prdTot.length> 0 ) { %>
+                            <div class="col-md-6 mb-4 stretch-card transparent">
+                                <div class="card card-tale">
                                     <div class="card-body">
-                                        <p class="mb-2">Number of Meetings</p>
-                                        <p class="fs-30 mb-0">34040</p>
-                                        <p>2.00% (30 days)</p>
+                                        <p class="mb-2">Products</p>
+                                        <p class="fs-30 mb-0">
+                                            <%= prdTot[0].total; %>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
+                        <% } %>
                             <div class="col-md-6 stretch-card transparent">
                                 <div class="card card-light-danger">
                                     <div class="card-body">

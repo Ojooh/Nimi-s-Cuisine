@@ -25,77 +25,28 @@ module.exports.getDashboard = async (req, res, next) => {
         if (User && User.length > 0 && User[0].is_active == '1') {
             let sb = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" };
             sb.dash = "active"
-            let context = { user: User[0], sidebar: sb };
+
+            // admin
+            var sql = `SELECT COUNT(*) as total FROM users WHERE (user_type = "SuperAdmin" OR user_type = "Admin" OR user_type = "AdminEditor") AND ( is_active = "1");`
+            var adm_total = await DB.runSQLQuery(sql);
+
+            // cutomers
+            let param1 = ["COUNT(*) AS total"];
+            let param2 = "users";
+            let param3 = { "is_active": "1&", "user_type": "customer" };
+            var sql = DB.generateSelectSQL(param1, param2, param3);
+            var cus_total = await DB.runSQLQuery(sql);
+
+            // products
+            param1 = ["COUNT(*) AS total"];
+            param2 = "products";
+            param3 = { "is_active": "1" };
+            var sql = DB.generateSelectSQL(param1, param2, param3);
+            var prod_total = await DB.runSQLQuery(sql);
+
+
+            let context = { prdTot: prod_total, uTot: adm_total, cTot: cus_total, user: User[0], sidebar: sb };
             res.render('admin/index', context);
-            // var email = req.session.username;
-            // var user = await DB.getUserByEmail(email);
-
-            // if ((user.length > 0 && user[0].is_active == '1') && (user[0].user_type == "ADMS" || user[0].user_type == "ADM")) {
-            //     var get_orders = await DB.getOrders();
-            //     var get_cats = await DB.getCategories();
-            //     var get_cus = await DB.getCustomers();
-            //     var get_events = await DB.getEvents();
-            //     var array_dates = [];
-            //     var array_sales = [];
-            //     var addOrderPayements = [];
-            //     var cat_name = [];
-            //     var booked_seats = [];
-            //     var totals = [];
-            //     var response = get_orders;
-            //     var timer = 0;
-            //     var timer_1 = 0;
-
-
-            // while (timer < get_orders.length) {
-            //     var ret = {};
-            //     var net = {};
-            //     var order_date = response[timer]["order_date"]
-
-            //     var r = new Date(order_date);
-            //     order_date = r.getFullYear() + "-" + String((parseInt(r.getMonth()) + 1)).padStart(2, '0') + "-" + r.getDate();
-            //     array_dates.push(order_date);
-
-            //     ret[order_date] = response[timer]["amount"];
-            //     array_sales.push(ret);
-
-
-            //     for (var g = 0; g < array_sales.length; g++) {
-            //         for (var i in array_sales[g]) {
-            //             var k = i;
-            //             var v = array_sales[g][i];
-            //         }
-            //         prev = net[k];
-            //         if (prev != undefined) {
-            //             net[k] = prev + parseInt(v);
-            //         } else {
-            //             net[k] = parseInt(v)
-            //         }
-
-
-            //     }
-            //     timer++;
-
-
-            // }
-            // addOrderPayements.push(net);
-            // var noRepeatDates = JSON.stringify([helper.array_unique(array_dates)]);
-
-
-            // while (timer_1 < get_cats.length) {
-            //     var categories = get_cats[timer_1];
-            //     cat_name.push(categories["cat_name"]);
-            //     booked_seats.push(categories["cat_booked_seats"]);
-            //     timer_1++;
-            // }
-
-            // var color = ["green", "gold", "aqua", "purple", "blue", "red", "cyan", "yellow", "magenta"];
-
-            // // Get total number of seats sold per category
-            // var result = await DB.addNumRows();
-            // totals.push(result[0]['total_booked_seats']);
-            // var facatys = { cat_name: cat_name, booked: booked_seats, color: color, totals: totals };
-
-            // var context = { user: user, isset: "dashboard", facts: facatys, orders: get_orders, cats: get_cats, customers: get_cus, events: get_events, op: JSON.stringify(addOrderPayements), nrp: noRepeatDates };
 
         }
         else {
@@ -1705,6 +1656,145 @@ module.exports.getEvents = async (req, res) => {
             sb.event = "active";
             let context = { evs: Evs, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
             res.render('admin/events', context);
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Create New Photo Gallery Profile
+module.exports.addEvent = async (req, res) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = await vd.validEvent(req);
+
+            if (state) {
+                var email = req.session.username;
+                let param1 = "events";
+                if (req.files && req.files !== undefined && req.files.link && req.files.link !== undefined && req.files.link != "") {
+                    let img = req.files.link;
+                    let ext = img.name.split(".");
+                    let new_name = uuidv4() + "." + ext[ext.length - 1];
+                    let dir = "public/img/events/" + new_name;
+                    let db_path = "/img/events/" + new_name;
+                    let param2 = {
+                        "title": req.body.name, "descp": req.body.descp,
+                        "img": db_path, "is_active": "1"
+                    };
+                    let param3 = param2;
+                    var sql = DB.generateInsertSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                    img.mv(dir)
+                } else {
+                    data.error = "No Images were sent, Invalid Photo";
+                    res.json(data)
+                }
+
+
+                let subj = "Created " + req.body.name + " Event";
+                param1 = "activities";
+                param2 = { "activity_type": "website_update", "title": subj, "category": "event", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Upate New Product Profile
+module.exports.editEvent = async (req, res) => {
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = await vd.validEvent(req);
+
+            if (state) {
+                let one = ["*"];
+                let two = "events";
+                let three = { "id": req.body.ID };
+                var sql = DB.generateSelectSQL(one, two, three);
+                var exist = await DB.runSQLQuery(sql);
+
+                var email = req.session.username;
+                let param1 = "events";
+                if (req.files && req.files !== undefined && req.files.link && req.files.link !== undefined && req.files.link != "") {
+                    if (exist && exist.length > 0) {
+                        let url = path.join(__dirname, '../', 'public') + exist[0].img
+                        fs.unlink(url, function (err) {
+                            if (err) throw err;
+                            console.log('File deleted!');
+                        });
+                    }
+                    let img = req.files.link;
+                    let ext = img.name.split(".");
+                    let new_name = uuidv4() + "." + ext[ext.length - 1];
+                    let dir = "public/img/events/" + new_name;
+                    let db_path = "/img/events/" + new_name;
+                    let param2 = {
+                        "title": req.body.name, "descp": req.body.descp,
+                        "img": db_path, "is_active": "1"
+                    };
+                    let param3 = { "id": req.body.ID };
+                    var sql = DB.generateUpdateSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                    img.mv(dir)
+                } else {
+                    let param2 = {
+                        "title": req.body.name, "descp": req.body.descp,
+                        "img": exist[0].img, "is_active": "1"
+                    };
+                    let param3 = { "id": req.body.ID };
+                    var sql = DB.generateUpdateSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                }
+
+
+                let subj = "Updated " + exist[0].title + " Event";
+                param1 = "activities";
+                param2 = { "activity_type": "website_update", "title": subj, "category": "event", "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
         }
         else {
             res.redirect("/auth/login");

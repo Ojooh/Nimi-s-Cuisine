@@ -17,6 +17,7 @@
 }
 
 html {
+  scroll-behavior: smooth;
   font-family: sans-serif;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
@@ -967,12 +968,12 @@ a.text-primary:hover {
   display: block;
   border-radius: 7px;
   margin-bottom: 20px;
-  width: 350px;
+  width: 100%;
   height: 200px;
 }
 
 .product .thumbnail img {
-  width: 320px !important;
+  width: 100% !important;
   height: 200px !important;
   margin-bottom: 0;
   -webkit-transition: 0.3s all ease;
@@ -1175,5 +1176,124 @@ a.text-primary:hover {
   img {
     width: 100% !important;
     height: 180px !important;
+  }
+}
+
+.event {
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+
+  @media (max-width: 992px) {
+    height: auto;
+  }
+
+  img {
+    max-height: 410px;
+    border-radius: 10px;
+  }
+
+  .event-title {
+    // font-size: 30px;
+    font-family: 'Playfair Display', serif;
+    color: #ff5200;
+
+    @media (max-width: 992px) {
+      margin-top: 20px;
+    }
+  }
+
+  .event-descp {
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: left;
+    width: 100%;
+    max-height: 410px;
+    height: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      outline: 1px solid black;
+    }
+  }
+}
+
+footer {
+  background: #645f56;
+  font-size: 14px;
+  color: #fff;
+  padding: 70px 0;
+
+  a {
+    color: #ff5200;
+    position: relative;
+    display: inline-block;
+  }
+
+  .widget {
+    margin-bottom: 40px;
+    display: block;
+    position: relative;
+    z-index: 1;
+
+    input {
+      border-radius: 30px;
+    }
+
+    @media (max-width: 992px) {
+      text-align: center;
+    }
+
+    .links li a {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .links li {
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 20px;
+      color: #fff;
+      margin-bottom: 30px;
+    }
+
+    .social li {
+      display: inline-block;
+      margin-right: 10px;
+      a {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        position: relative;
+        background-color: #fff;
+        border-radius: 50%;
+        color: #000;
+
+        i {
+          font-size: 18px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          -webkit-transform: translate(-50%, -50%);
+          -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+        }
+
+        &:hover {
+          color: #fff;
+          background-color: #ff5200;
+        }
+      }
+    }
   }
 }

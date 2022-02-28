@@ -67,9 +67,18 @@ module.exports.getHomePage = async (req, res, next) => {
     console.log(sql)
     var Photos = await DB.runSQLQuery(sql);
 
+    param1 = ["*"];
+    param2 = "events";
+    param3 = { "is_active": "1" };
+    param4 = "LIMIT 4";
+    var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+    console.log(sql)
+    var Events = await DB.runSQLQuery(sql);
+
 
 
     var context = {
+        evs: Events,
         photos: Photos, testys: Testys, prds: Prds,
         cats: Cats, sl: SLinks, txt: Txt, lnks: Links,
         slds: Sliders, actv: 'Home'

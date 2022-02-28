@@ -176,3 +176,25 @@ module.exports.validPhoto = async (req) => {
     }
 };
 
+module.exports.validEvent = async (req) => {
+    if (helper.isEmpty(req.body.name) || (helper.validateNamey(req.body.name) == false)) {
+        return [null, false, { message: 'Event Title Input is not Valid' }];
+    }
+    else if ((req.files && helper.isImage(req.files.link) == false)) {
+        return [null, false, { message: 'File Sent is not an Image' }];
+    }
+    else if (helper.isEmpty(req.body.descp)) {
+        return [null, false, { message: 'Event Description Input is not Valid' }];
+    }
+
+    else {
+        req.body.name = helper.sentenceCase(req.body.name);
+        let msg = req.body.name + ' Event Profile Created successfully'
+        if (req.body.type != "add") {
+            msg = req.body.name + ' Event Profile Updated successfully'
+        }
+        let extra = {}
+        return [extra, true, { message: msg }];
+    }
+};
+
