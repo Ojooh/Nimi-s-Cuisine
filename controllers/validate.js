@@ -198,3 +198,53 @@ module.exports.validEvent = async (req) => {
     }
 };
 
+module.exports.validUser = async (req) => {
+    let exist = await helper.emailExist(req.body.email);
+    console.log(exist);
+    if (helper.isEmpty(req.body.fname) || helper.validateName(req.body.fname) == false) {
+        return [null, false, { message: 'Fisrt Name Input is not valid' }];
+    }
+    else if (helper.isEmpty(req.body.lname) || helper.validateName(req.body.lname) == false) {
+        return [null, false, { message: 'Last Name Input is not valid' }];
+    }
+    else if (helper.isEmpty(req.body.email) || helper.validateEmail(req.body.email) == false) {
+        return [null, false, { message: 'Email Input is not valid' }];
+    }
+    else if (req.body.type == "add" && exist) {
+        return [null, false, { message: 'Email Input is not valid, already exist in database' }];
+    }
+    else if (!helper.isEmpty(req.body.phone) && helper.validateTel(req.body.phone) == false) {
+        swalShowError("Phone Number Input is not valid", errorClass);
+    }
+    else if (helper.isEmpty(req.body.gender)) {
+        return [null, false, { message: 'Gender input not valid' }];
+    }
+    else if (helper.isEmpty(req.body.user_type)) {
+        return [null, false, { message: 'User Type input not valid' }];
+    }
+    else if (req.body.link && req.body.link != undefined && helper.isImage(req.body.link) == false) {
+        console.log(req.body.link);
+        return [null, false, { message: 'Profile Picture input not valid' }];
+    }
+    else {
+        req.body.fname = helper.sentenceCase(req.body.fname);
+        req.body.lname = helper.sentenceCase(req.body.lname);
+        let msg = req.body.fname + ' User Profile Created successfully'
+        if (req.body.type != "add") {
+            msg = req.body.fname + ' User Profile Updated successfully'
+        }
+        if (req.body.user_type == "SuperAdmin") {
+            title = "ADMS"
+            category = "admin_user"
+        } else if (req.body.user_type == "Admin") {
+            title = "ADM"
+            category = "admin_user"
+        } else {
+            title = "CUS"
+            category = "cus_update"
+        }
+        let extra = { id: await helper.generateUID(title, "users", 4), category: category }
+        return [extra, true, { message: msg }];
+    }
+};
+

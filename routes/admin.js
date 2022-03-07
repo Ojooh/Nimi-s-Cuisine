@@ -96,6 +96,14 @@ router.post('/add_event', adminHandler.addEvent);
 /* POST edit Phto */
 router.post('/edit_event', adminHandler.editEvent);
 
+/* GET admins page. */
+router.get('/admins', adminHandler.getAdmins);
+
+/* POST add Product */
+router.post('/add_user', adminHandler.addUser);
+
+/* POST edit Product */
+router.post('/edit_user', adminHandler.editUser);
 
 
 

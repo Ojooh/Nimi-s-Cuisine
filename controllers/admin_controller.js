@@ -1804,3 +1804,199 @@ module.exports.editEvent = async (req, res) => {
         res.redirect("/auth/login");
     }
 };
+
+// Function to render Product Category Page
+module.exports.getAdmins = async (req, res) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin")) {
+            var icon = "fas fa-user-shield";
+            var title = "Administrators"
+
+            var sql = `SELECT * FROM users WHERE ((id != '1')) AND ((is_active = '1') OR (is_active = '0') OR (user_type = 'SuperAdmin') OR (user_type = 'Admin')) ORDER BY date_join DESC`
+            // console.log(sql);
+            var Usrs = await DB.runSQLQuery(sql);
+
+            param1 = ["*"];
+            param2 = "activities";
+            param3 = { "is_active": '1&', "category": "admin_user" };
+            param4 = "ORDER BY date_created DESC LIMIT 10";
+            var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+            var activities = await DB.runSQLQuery(sql);
+
+            let sb = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" };
+            sb.usrs = "active"
+            sb.adms = "active";
+            let context = { usrs: Usrs, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
+            res.render('admin/admins', context);
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Create New Product Profile
+module.exports.addUser = async (req, res) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin")) {
+            var data = {};
+            var [blah, state, msg] = await vd.validUser(req);
+
+            if (state) {
+                var email = req.session.username;
+                let param1 = "users";
+                if (req.files && req.files !== undefined && req.files.link && req.files.link !== undefined && req.files.link != "") {
+                    let img = req.files.link;
+                    let ext = img.name.split(".");
+                    let new_name = uuidv4() + "." + ext[ext.length - 1];
+                    let dir = "public/img/usrs/" + new_name;
+                    let db_path = "/img/usrs/" + new_name;
+                    let param2 = {
+                        "user_id": blah.id, "fname": req.body.fname, "lname": req.body.lname,
+                        "pp": db_path, "email": req.body.email, "phone": req.body.phone,
+                        "gender": req.body.gender, "user_type": req.body.user_type,
+                        "address": req.body.address, "is_active": "0", "uid": uuidv4()
+                    };
+                    let param3 = param2;
+                    var sql = DB.generateInsertSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                    img.mv(dir)
+                } else {
+                    let db_path = "";
+                    let param2 = {
+                        "user_id": blah.id, "fname": req.body.fname, "lname": req.body.lname,
+                        "pp": db_path, "email": req.body.email, "phone": req.body.phone,
+                        "gender": req.body.gender, "user_type": req.body.user_type,
+                        "address": req.body.address, "is_active": "0", "uid": uuidv4()
+                    };
+                    let param3 = param2;
+                    var sql = DB.generateInsertSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                }
+
+
+                let subj = "Created " + req.body.fname + " User";
+                param1 = "activities";
+                param2 = { "activity_type": "user_update", "title": subj, "category": blah.category, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+//Function To Upate New Product Profile
+module.exports.editUser = async (req, res) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin" || User[0].user_type == "AdminEditor")) {
+            var data = {};
+            var [blah, state, msg] = await vd.validUser(req);
+
+            if (state) {
+                let one = ["*"];
+                let two = "users";
+                let three = { "id": req.body.ID };
+                var sql = DB.generateSelectSQL(one, two, three);
+                var exist = await DB.runSQLQuery(sql);
+
+                var email = req.session.username;
+                let param1 = "users";
+                if (req.files && req.files !== undefined && req.files.link && req.files.link !== undefined && req.files.link != "") {
+                    if (exist && exist.length > 0) {
+                        let url = path.join(__dirname, '../', 'public') + exist[0].img
+                        fs.unlink(url, function (err) {
+                            if (err) throw err;
+                            console.log('File deleted!');
+                        });
+                    }
+                    let img = req.files.link;
+                    let ext = img.name.split(".");
+                    let new_name = uuidv4() + "." + ext[ext.length - 1];
+                    let dir = "public/img/prds/" + new_name;
+                    let db_path = "/img/prds/" + new_name;
+                    let param2 = {
+                        "user_id": blah.id, "fname": req.body.fname, "lname": req.body.lname,
+                        "pp": db_path, "email": req.body.email, "phone": req.body.phone,
+                        "gender": req.body.gender, "user_type": req.body.user_type,
+                        "address": req.body.address
+                    };
+                    let param3 = { "id": req.body.ID };
+                    var sql = DB.generateUpdateSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                    img.mv(dir)
+                } else {
+                    let param1 = "products";
+                    let param2 = {
+                        "user_id": blah.id, "fname": req.body.fname, "lname": req.body.lname,
+                        "pp": exist[0].img, "email": req.body.email, "phone": req.body.phone,
+                        "gender": req.body.gender, "user_type": req.body.user_type,
+                        "address": req.body.address, "is_active": "0"
+                    };
+                    let param3 = { "id": req.body.ID };
+                    var sql = DB.generateUpdateSQL(param1, param2, param3);
+                    await DB.runSQLQuery(sql);
+                }
+
+
+                let subj = "Updated " + req.body.fname + " Users";
+                param1 = "activities";
+                param2 = { "activity_type": "user_update", "title": subj, "category": blah.category, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
+                param3 = param2;
+                var sql = DB.generateInsertSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+
+                data.success = msg.message;
+                res.json(data)
+            } else {
+                data.error = msg.message;
+                res.json(data)
+            }
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};

@@ -67,6 +67,16 @@ canvas {
   max-height: 200px;
 }
 
+.bd-r {
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #000;
+}
+
+.bd-r img {
+  border-radius: 50%;
+}
+
 .deactivated {
   display: none;
 }

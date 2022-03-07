@@ -1,0 +1,111 @@
+<% include includes/head %>
+
+    <body>
+
+        <div class="wrapper">
+            <!-- Sidebar  -->
+            <% include includes/sidebar %>
+            <!-- Sidebar End -->
+
+            <!-- Top Bar -->
+            <% include includes/topbar %>
+            <!-- Top Bar End -->
+
+            <!-- Page Content  -->
+            <div id="content">
+                <div class="container-fluid">
+                    <!-- Page Title Row -->
+                    <% include includes/pageTitle %>
+                    <!-- Page Title Row End -->
+
+                    <!-- Add Button Modal-->
+                    <div class="row">
+                        <div class="col-12">
+                            <div id="addUsrMdl" class="float-left my-4" data-prd="<%= usrs %>">
+                                <a href="#" class="btn btn-outline-nm">
+                                    <i class="fas fa-plus"></i>
+                                    Create New Administrator
+                                </a>
+                            </div>
+
+                                        
+                        </div>
+                    </div>
+                    <!-- End Add Button Modal-->
+
+                    <!-- Page Content Row -->
+                    <div class="row">
+                        <div class="col-md-8 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title text-center">Administrators</h4>
+                                </div>
+                                <div class="card-body">
+                                <% if (usrs && usrs.length> 0) { %>
+                                    <div class="list-wrapper pt-2">
+                                        <ul class="todo-list todo-list-custom">
+                                        <% for (var t=0; t < usrs.length; t++) { %>
+
+                                            <li>
+                                                <div class="form-check form-check-flat">
+                                                    <label class="form-check-label">
+                                                    <% if (usrs[t].is_active=='1' ) { %>
+                                                        <input class="checkbox active" value="0"
+                                                            id="<%= usrs[t].id %>"
+                                                            data-name="<%= usrs[t].name %>"
+                                                            type="checkbox" checked>
+                                                        <% } else { %>
+                                                            <input class="checkbox active"
+                                                                value="1"
+                                                                id="<%= usrs[t].id %>"
+                                                                data-name="<%= usrs[t].name %>"
+                                                                type="checkbox">
+                                                        <% } %>
+                                                        <%= usrs[t].fname + ' ' + usrs[t].lname %>
+                                                        <i class="input-helper"></i>
+                                                    </label>
+                                                </div>
+                                                <div class="icons-right float-left">
+                                                    <i class="edit far fa-edit"
+                                                        data-id="<%= usrs[t].id %>"
+                                                        data-about="<%= usrs[t].product+ '*' +usrs[t].name+ '*' +usrs[t].title+ '*' +usrs[t].message %>"></i>
+                                                    <i class="remove fas fa-times"
+                                                        data-id="<%= usrs[t].id %>"
+                                                        data-name="<%= usrs[t].name %>"></i>
+                                                    <i class="caret fas fa-angle-down" data-id="<%= usrs[t].id %>"></i>
+                                                </div>
+                                            </li>
+
+                                        <% } %>
+                                        </ul>
+                                    </div>
+                                <% } else { %>
+                                    <div
+                                        class="text-danger text-center alert alert-success d-flex w-100">
+                                        No Administrators Available
+                                    </div>
+                                <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <% include includes/activities %>
+                    </div>
+                    <!-- Page Content Row -->
+
+                </div>
+            </div>
+        </div>
+
+    </body>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/custom/design.js"></script>
+    <script type="module" src="/js/custom/validator.js"></script>
+    <script type="module" src="/js/custom/helper.js"></script>
+    <script type="module" src="/js/custom/script_10.js"></script>
+
+</html>

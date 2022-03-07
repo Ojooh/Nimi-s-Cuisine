@@ -138,7 +138,7 @@ module.exports.emailExist = async (email) => {
     // console.log("helpey");
     // console.log(user_e)
     if (user_e.length > 0) {
-        // console.log("helper" + true);
+        console.log("helper" + true);
         return true
     } else {
         // console.log("helper" + false);

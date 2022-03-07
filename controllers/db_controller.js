@@ -56,10 +56,8 @@ module.exports.generateSelectSQL = (param1, param2, param3, param4 = "") => {
     if (Object.keys(obj).length > 0) {
         let where = `(`;
         if (obj && obj != "") {
-            // console.log(obj);
             Object.keys(obj).forEach(function (key) {
                 j = obj[key]
-                console.log(j)
                 if (key[key.length - 1] == ">") {
                     key = key.slice(0, -1);
                 }
@@ -72,15 +70,17 @@ module.exports.generateSelectSQL = (param1, param2, param3, param4 = "") => {
                     where = where + key + " = '" + val + "') OR (";
                 }
                 else if (j[j.length - 1] == '&' && j[0] == '!') {
-                    const val = j.slice(1, -1)
+                    const val = j.slice(1, j.length)
                     where = where + key + " != '" + val + "') AND (";
                 }
                 else if (j[j.length - 1] == '/' && j[0] == '!') {
-                    const val = j.slice(1, -1)
+                    const val = j.slice(1, j.length)
+
                     where = where + key + " != '" + val + "') OR (";
                 }
                 else if (j[0] == '!') {
-                    const val = j.slice(1, -1)
+
+                    const val = j.slice(1, j.length)
                     where = where + key + " != '" + val + "')";
                 }
                 else {

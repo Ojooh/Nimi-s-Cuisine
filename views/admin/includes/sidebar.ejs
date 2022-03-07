@@ -84,9 +84,22 @@
             </a>
         </li>
         <li class="<%= sidebar.usrs %>">
-            <a href="#">
-            <i class="fas fa-user-shield"></i> Users
+            <a href="#usrSubmenu" data-toggle="collapse"
+                aria-expanded="<%= ((sidebar.usrs && sidebar.usrs !== '') ? true : false)  %>" class="dropdown-toggle">
+                <i class="fas fa-users"></i> Users
             </a>
+            <ul class="collapse list-unstyled <%= ((sidebar.usrs && sidebar.usrs !== '') ? 'show' : '')  %>" id="usrSubmenu">
+                <li class="<%= ((sidebar.adms && sidebar.adms !== '') ? sidebar.adms : '')  %>">
+                    <a href="/admin/admins">
+                        <i class="fas fa-user-shield"></i> Administrators
+                    </a>
+                </li>
+                <li class="<%= ((sidebar.cus && sidebar.cus !== '') ? sidebar.cus : '')  %>">
+                    <a href="/admin/customers">
+                        <i class="fas fa-user-alt"></i> customers
+                    </a>
+                </li>
+            </ul>
         </li>
     </ul>
 
