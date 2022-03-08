@@ -71,10 +71,18 @@ canvas {
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid #000;
+  height: 351px;
 }
 
 .bd-r img {
   border-radius: 50%;
+  height: 351px;
+}
+
+.userImg {
+  width: 200px;
+  height: 120px;
+  overflow: hidden;
 }
 
 .deactivated {

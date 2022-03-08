@@ -83,6 +83,7 @@
             <i class="fas fa-money-bill-wave"></i> Payments
             </a>
         </li>
+        <% if (user && user.user_type == "SuperAdmin") { %>
         <li class="<%= sidebar.usrs %>">
             <a href="#usrSubmenu" data-toggle="collapse"
                 aria-expanded="<%= ((sidebar.usrs && sidebar.usrs !== '') ? true : false)  %>" class="dropdown-toggle">
@@ -101,6 +102,7 @@
                 </li>
             </ul>
         </li>
+        <% } %>
     </ul>
 
 

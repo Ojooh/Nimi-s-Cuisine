@@ -1,5 +1,7 @@
 const DB = require('./db_controller');
 var vd = require("./validate");
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 
 //Function To Render Login Page
@@ -90,7 +92,8 @@ module.exports.getHomePage = async (req, res, next) => {
 module.exports.getShareTesty = async (req, res) => {
     console.log(req.params.id);
     var context = {
-        product: req.params.id
+        product: req.params.id,
+        page: "Share Your Testimonial"
     }
     res.render('nimi/share', context);
 
@@ -122,6 +125,88 @@ module.exports.addTesty = async (req, res, next) => {
         await DB.runSQLQuery(sql);
 
         data.success = msg.message;
+        res.json(data)
+    } else {
+        data.error = msg.message;
+        res.json(data)
+    }
+};
+
+//Function To verify user
+module.exports.verifyAdmin = async (req, res) => {
+    console.log(req.params.id);
+
+    param1 = ["*"];
+    param2 = "users";
+    param3 = { "uid": req.params.id };
+    var sql = DB.generateSelectSQL(param1, param2, param3);
+    console.log(sql)
+    var user = await DB.runSQLQuery(sql);
+
+    if (user.length == 1 && user[0].is_active == "0") {
+        var context = {
+            user: user,
+            page: "Verify Account",
+        }
+
+    } else {
+        var context = {
+            error: "Not a valid User",
+            page: "Verify Account"
+        }
+    }
+
+    res.render('nimi/verify', context);
+
+
+};
+
+// function to activate user account
+module.exports.activate = async (req, res, next) => {
+    let data = {};
+    let passy = "";
+    let c;
+
+    param1 = ["*"];
+    param2 = "users";
+    param3 = { "uid": req.body.uid };
+    var sql = DB.generateSelectSQL(param1, param2, param3);
+    console.log(sql)
+    var user = await DB.runSQLQuery(sql);
+
+    if (user.length == 1 && user[0].is_active == "0") {
+        
+        await bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+            if (!err) {
+                passy = hash;
+                console.log(passy);
+                let param1 = "users";
+                let param2 = {
+                    "password": passy, "is_active": "1",
+                    "uid": ""
+                };
+                let param3 = { uid: req.body.uid }
+                var sql = DB.generateUpdateSQL(param1, param2, param3);
+                await DB.runSQLQuery(sql);
+            }
+        })
+
+
+        if (user[0].user_type) {
+            c = "admin_user"
+        } else {
+            c = "cus_user"
+        }
+
+
+        let subj = "Activated " + user[0].fname + " Account";
+        param1 = "activities";
+        param2 = { "activity_type": "user_update", "title": subj, "category": c, "activity_by": user[0].fname };
+        param3 = param2;
+        var sql = DB.generateInsertSQL(param1, param2, param3);
+        await DB.runSQLQuery(sql);
+
+        data.success = "User Account is Activated";
         res.json(data)
     } else {
         data.error = msg.message;

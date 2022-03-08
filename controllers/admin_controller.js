@@ -6,14 +6,15 @@ var hp = require("./helper");
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
-// const img_path = { "events": "public/images/event_files/", "cats": "public/images/cat_files/", "user": "public/images/user_files/", "slider": "public/images/slider/" };
-// const saltRounds = 10;
+
 
 
 
 //Function To Render Dashboard
 module.exports.getDashboard = async (req, res, next) => {
-    console.log(req.session.loggedin)
+    // const { encrypt, decrypt } = require('./crypto');
+    // const hash = encrypt("xpzublcjbdkannmm");
+    // console.log(hash)
     if (req.session.username && req.session.loggedin) {
         var email = req.session.username;
         let param1 = ["*"];
@@ -30,12 +31,21 @@ module.exports.getDashboard = async (req, res, next) => {
             var sql = `SELECT COUNT(*) as total FROM users WHERE (user_type = "SuperAdmin" OR user_type = "Admin" OR user_type = "AdminEditor") AND ( is_active = "1");`
             var adm_total = await DB.runSQLQuery(sql);
 
+            var sql = `SELECT COUNT(*) as total FROM users WHERE (user_type = "SuperAdmin" OR user_type = "Admin" OR user_type = "AdminEditor") AND ( is_active = "0");`
+            var adm_i_total = await DB.runSQLQuery(sql);
+
             // cutomers
             let param1 = ["COUNT(*) AS total"];
             let param2 = "users";
-            let param3 = { "is_active": "1&", "user_type": "customer" };
+            let param3 = { "is_active": "1&", "user_type": "Customer" };
             var sql = DB.generateSelectSQL(param1, param2, param3);
             var cus_total = await DB.runSQLQuery(sql);
+
+            param1 = ["COUNT(*) AS total"];
+            param2 = "users";
+            param3 = { "is_active": "0&", "user_type": "Customer" };
+            var sql = DB.generateSelectSQL(param1, param2, param3);
+            var cus_i_total = await DB.runSQLQuery(sql);
 
             // products
             param1 = ["COUNT(*) AS total"];
@@ -45,7 +55,7 @@ module.exports.getDashboard = async (req, res, next) => {
             var prod_total = await DB.runSQLQuery(sql);
 
 
-            let context = { prdTot: prod_total, uTot: adm_total, cTot: cus_total, user: User[0], sidebar: sb };
+            let context = { prdTot: prod_total, uTot: adm_total, uiTot: adm_i_total, cTot: cus_total, ciTot: cus_i_total, user: User[0], sidebar: sb };
             res.render('admin/index', context);
 
         }
@@ -1727,7 +1737,7 @@ module.exports.addEvent = async (req, res) => {
     }
 };
 
-//Function To Upate New Product Profile
+//Function To Upate Event
 module.exports.editEvent = async (req, res) => {
     if (req.session.username && req.session.loggedin) {
         var email = req.session.username;
@@ -1805,7 +1815,7 @@ module.exports.editEvent = async (req, res) => {
     }
 };
 
-// Function to render Product Category Page
+// Function to render admins page
 module.exports.getAdmins = async (req, res) => {
     console.log(req.session.loggedin)
     if (req.session.username && req.session.loggedin) {
@@ -1820,9 +1830,15 @@ module.exports.getAdmins = async (req, res) => {
             var icon = "fas fa-user-shield";
             var title = "Administrators"
 
-            var sql = `SELECT * FROM users WHERE ((id != '1')) AND ((is_active = '1') OR (is_active = '0') OR (user_type = 'SuperAdmin') OR (user_type = 'Admin')) ORDER BY date_join DESC`
+            var sql = `SELECT * FROM users WHERE ((id != '` + User[0].id + `')) AND ((is_active = '1') OR (is_active = '0') OR (user_type = 'SuperAdmin') OR (user_type = 'Admin')) ORDER BY date_join DESC`
             // console.log(sql);
             var Usrs = await DB.runSQLQuery(sql);
+
+            let f = 0;
+            Usrs.forEach((item) => {
+                Usrs[f].last_login = moment(new Date(item.last_login)).format('MMMM Do, YYYY h:mma');
+                f = f + 1;
+            })
 
             param1 = ["*"];
             param2 = "activities";
@@ -1836,6 +1852,46 @@ module.exports.getAdmins = async (req, res) => {
             sb.adms = "active";
             let context = { usrs: Usrs, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
             res.render('admin/admins', context);
+        }
+        else {
+            res.redirect("/auth/login");
+        }
+    }
+    else {
+        res.redirect("/auth/login");
+    }
+};
+
+// Function to render customers page
+module.exports.getCustomers = async (req, res) => {
+    console.log(req.session.loggedin)
+    if (req.session.username && req.session.loggedin) {
+        var email = req.session.username;
+        let param1 = ["*"];
+        let param2 = "users";
+        let param3 = { "email": email + "/", "user_id": email };
+        var sql = DB.generateSelectSQL(param1, param2, param3);
+        var User = await DB.runSQLQuery(sql);
+
+        if (User && User.length > 0 && User[0].is_active == '1' && (User[0].user_type == "SuperAdmin" || User[0].user_type == "Admin")) {
+            var icon = "fas fa-user-alt";
+            var title = "Customers"
+
+            var sql = `SELECT * FROM users WHERE ((id != '` + User[0].id + `') AND (user_type = 'Customer')) AND ((is_active = '1') OR (is_active = '0') ) ORDER BY date_join DESC`
+            var Usrs = await DB.runSQLQuery(sql);
+
+            param1 = ["*"];
+            param2 = "activities";
+            param3 = { "is_active": '1&', "category": "cus_user" };
+            param4 = "ORDER BY date_created DESC LIMIT 10";
+            var sql = DB.generateSelectSQL(param1, param2, param3, param4);
+            var activities = await DB.runSQLQuery(sql);
+
+            let sb = { dash: "", web: "", prd: "", ords: "", pays: "", usrs: "" };
+            sb.usrs = "active"
+            sb.cus = "active";
+            let context = { usrs: Usrs, acts: activities, user: User[0], sidebar: sb, icon: icon, title: title };
+            res.render('admin/customers', context);
         }
         else {
             res.redirect("/auth/login");
@@ -1874,7 +1930,7 @@ module.exports.addUser = async (req, res) => {
                         "user_id": blah.id, "fname": req.body.fname, "lname": req.body.lname,
                         "pp": db_path, "email": req.body.email, "phone": req.body.phone,
                         "gender": req.body.gender, "user_type": req.body.user_type,
-                        "address": req.body.address, "is_active": "0", "uid": uuidv4()
+                        "address": req.body.address, "is_active": "0", "uid": blah.uid
                     };
                     let param3 = param2;
                     var sql = DB.generateInsertSQL(param1, param2, param3);
@@ -1886,7 +1942,7 @@ module.exports.addUser = async (req, res) => {
                         "user_id": blah.id, "fname": req.body.fname, "lname": req.body.lname,
                         "pp": db_path, "email": req.body.email, "phone": req.body.phone,
                         "gender": req.body.gender, "user_type": req.body.user_type,
-                        "address": req.body.address, "is_active": "0", "uid": uuidv4()
+                        "address": req.body.address, "is_active": "0", "uid": blah.uid
                     };
                     let param3 = param2;
                     var sql = DB.generateInsertSQL(param1, param2, param3);
@@ -1942,7 +1998,8 @@ module.exports.editUser = async (req, res) => {
                 var email = req.session.username;
                 let param1 = "users";
                 if (req.files && req.files !== undefined && req.files.link && req.files.link !== undefined && req.files.link != "") {
-                    if (exist && exist.length > 0) {
+                    console.log(exist[0].img);
+                    if (exist && exist.length > 0 && exist[0].img != "" && exist[0].img != undefined) {
                         let url = path.join(__dirname, '../', 'public') + exist[0].img
                         fs.unlink(url, function (err) {
                             if (err) throw err;
@@ -1955,7 +2012,7 @@ module.exports.editUser = async (req, res) => {
                     let dir = "public/img/prds/" + new_name;
                     let db_path = "/img/prds/" + new_name;
                     let param2 = {
-                        "user_id": blah.id, "fname": req.body.fname, "lname": req.body.lname,
+                        "fname": req.body.fname, "lname": req.body.lname,
                         "pp": db_path, "email": req.body.email, "phone": req.body.phone,
                         "gender": req.body.gender, "user_type": req.body.user_type,
                         "address": req.body.address
@@ -1965,9 +2022,8 @@ module.exports.editUser = async (req, res) => {
                     await DB.runSQLQuery(sql);
                     img.mv(dir)
                 } else {
-                    let param1 = "products";
                     let param2 = {
-                        "user_id": blah.id, "fname": req.body.fname, "lname": req.body.lname,
+                        "fname": req.body.fname, "lname": req.body.lname,
                         "pp": exist[0].img, "email": req.body.email, "phone": req.body.phone,
                         "gender": req.body.gender, "user_type": req.body.user_type,
                         "address": req.body.address, "is_active": "0"
@@ -1978,7 +2034,7 @@ module.exports.editUser = async (req, res) => {
                 }
 
 
-                let subj = "Updated " + req.body.fname + " Users";
+                let subj = "Updated " + req.body.fname + " User";
                 param1 = "activities";
                 param2 = { "activity_type": "user_update", "title": subj, "category": blah.category, "activity_by": User[0].user_id + "_" + User[0].fname + User[0].lname };
                 param3 = param2;

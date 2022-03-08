@@ -99,6 +99,9 @@ router.post('/edit_event', adminHandler.editEvent);
 /* GET admins page. */
 router.get('/admins', adminHandler.getAdmins);
 
+/* GET admins page. */
+router.get('/customers', adminHandler.getCustomers);
+
 /* POST add Product */
 router.post('/add_user', adminHandler.addUser);
 

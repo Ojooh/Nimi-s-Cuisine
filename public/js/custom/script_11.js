@@ -33,7 +33,7 @@ jQuery(document).ready(function ($) {
         let fname, lname, email, phone, gender, user_type, address, link = "";
 
         Swal.fire({
-            title: 'Add Admin User',
+            title: 'Add A Customer',
             html:
                 '<div class="photot-add-img bd-r"><img id="previewImg" src="/img/prds/default.png" class="img-fluid" /></div>' +
                 `<div class="form-row">
@@ -65,8 +65,7 @@ jQuery(document).ready(function ($) {
                         <label for="swal-input6"> User Type</label>
                         <select id="swal-input6" class="swal2-input form-control">
                             <option value="">Select User Type</option>
-                            <option value="Admin">Admin</option>
-                            <option value="SuperAdmin">SuperAdmin</option>
+                            <option value="Customer">Customer</option>
                         </select>
                     </div>
                     <div class="form-group col-md-12">
@@ -115,6 +114,9 @@ jQuery(document).ready(function ($) {
                 else if (linky && linky != undefined && isImage(linky) == false) {
                     swalShowError("Profile Picture input not valid", errorClass);
                 }
+                else if (isEmpty(addressy)) {
+                    swalShowError("Address input not valid", errorClass);
+                }
                 else {
                     return [fnamey, lnamey, emaily, phoney, gendery, user_typey, linky, addressy];
                 }
@@ -129,7 +131,7 @@ jQuery(document).ready(function ($) {
             link = result.value[6]
             address = result.value[7]
 
-            if (fname && fname != "" && lname && lname != "" && user_type && user_type != "") {
+            if (fname && fname != "" && lname && lname != "" && user_type && user_type != "" && address != "") {
                 let url = "/admin/add_user";
                 let param = { url: url };
                 let data = new FormData()
@@ -179,7 +181,7 @@ jQuery(document).ready(function ($) {
 
     active.on("change", function (e) {
         let url = "/admin/item/status";
-        let data = { extra: "admin_user", "item": "users", "name": $(this).attr("data-name"), "state": $(this).val(), "ID": $(this).attr("id") };
+        let data = { extra: "cus_user", "item": "users", "name": $(this).attr("data-name"), "state": $(this).val(), "ID": $(this).attr("id") };
 
         $.ajax({
             url: url,
@@ -260,8 +262,7 @@ jQuery(document).ready(function ($) {
                         <label for="swal-input6"> User Type</label>
                         <select id="swal-input6" class="swal2-input form-control">
                             <option value="`+ user_type + `">` + user_type + `</option>
-                            <option value="Admin">Admin</option>
-                            <option value="SuperAdmin">SuperAdmin</option>
+                            <option value="Customer">Customer</option>
                         </select>
                     </div>
                     <div class="form-group col-md-12">
@@ -310,6 +311,9 @@ jQuery(document).ready(function ($) {
                 else if (linky && linky != undefined && isImage(linky) == false) {
                     swalShowError("Profile Picture input not valid", errorClass);
                 }
+                else if (isEmpty(addressy)) {
+                    swalShowError("Address input not valid", errorClass);
+                }
                 else {
                     if (fnamey == fname && lnamey == lname && emaily == email && phoney == phone && gendery == gender && user_typey == user_type && address == addressy && linky == undefined) {
                         change = false;
@@ -329,7 +333,7 @@ jQuery(document).ready(function ($) {
             link = result.value[6]
             address = result.value[7]
 
-            if (fname && fname != "" && lname && lname != "" && user_type && user_type != "") {
+            if (fname && fname != "" && lname && lname != "" && user_type && user_type != "" && address != "") {
                 let url = "/admin/edit_user";
                 let param = { url: url };
                 let data = new FormData()
@@ -385,7 +389,7 @@ jQuery(document).ready(function ($) {
         e.stopPropagation();
 
         var ID = $(this).attr("data-id");
-        let data = { extra: "admin_user", "item": "users", "item_name": "User", "name": $(this).attr("data-name"), "ID": ID };
+        let data = { extra: "cus_user", "item": "users", "item_name": "User", "name": $(this).attr("data-name"), "ID": ID };
 
         let url = "/admin/item/delete"
 

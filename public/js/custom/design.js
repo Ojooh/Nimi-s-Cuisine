@@ -18,8 +18,7 @@ $(document).ready(function () {
         }
 
         if (parseFloat(duration._data.days) == 0 && parseFloat(duration._data.hours) != 0) {
-            since = Math.floor(duration.asHours()).toString() + " Hours Ago";
-            console.log(since);
+            since = Math.floor(duration.asHours()).toString() + " Hours Ago";;
             return since
         }
 
@@ -39,11 +38,9 @@ $(document).ready(function () {
             return since = "Recently"
         }
     }
-    console.log(prettyTimer.length)
 
     for (var n = 0; n < prettyTimer.length; n++) {
         var r = timeSince($(prettyTimer[n]).html());
-        console.log(r);
         $(prettyTimer[n]).html(r);
     }
 

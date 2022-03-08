@@ -46,34 +46,65 @@
                                         <ul class="todo-list todo-list-custom">
                                         <% for (var t=0; t < usrs.length; t++) { %>
 
-                                            <li>
-                                                <div class="form-check form-check-flat">
-                                                    <label class="form-check-label">
-                                                    <% if (usrs[t].is_active=='1' ) { %>
-                                                        <input class="checkbox active" value="0"
-                                                            id="<%= usrs[t].id %>"
-                                                            data-name="<%= usrs[t].name %>"
-                                                            type="checkbox" checked>
-                                                        <% } else { %>
-                                                            <input class="checkbox active"
-                                                                value="1"
-                                                                id="<%= usrs[t].id %>"
-                                                                data-name="<%= usrs[t].name %>"
-                                                                type="checkbox">
-                                                        <% } %>
-                                                        <%= usrs[t].fname + ' ' + usrs[t].lname %>
-                                                        <i class="input-helper"></i>
-                                                    </label>
+                                            <li class="d-block">
+                                                <div class="row w-100">
+                                                    <div class="col-md-9 p-0">
+                                                        <div class="form-check form-check-flat">
+                                                            <label class="form-check-label">
+                                                            <% if (usrs[t].is_active=='1' ) { %>
+                                                                <input class="checkbox active" value="0" id="<%= usrs[t].id %>" data-name="<%= usrs[t].fname %>" type="checkbox"
+                                                                    checked>
+                                                            <% } else { %>
+                                                                <input class="checkbox active" value="1" id="<%= usrs[t].id %>" data-name="<%= usrs[t].fname %>" type="checkbox">
+                                                            <% } %>
+                                                            <%= usrs[t].fname + ' ' + usrs[t].lname %>
+                                                            <i class="input-helper"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="col-md-5 p-0"></div> -->
+                                                    <div class="col-md-3 p-0">
+                                                        <div class="icons-right float-right">
+                                                            <i class="edit far fa-edit" data-id="<%= usrs[t].id %>"
+                                                                data-about="<%= usrs[t].fname+ '*' +usrs[t].lname+ '*' +usrs[t].email+ '*' +usrs[t].phone + '*' +usrs[t].gender + '*' +usrs[t].user_type + '*' +usrs[t].pp + '*' +usrs[t].address %>"></i>
+                                                            <i class="remove fas fa-times" data-id="<%= usrs[t].id %>" data-name="<%= usrs[t].fname %>"></i>
+                                                            <i class="caret fas fa-angle-down" data-id="<%= usrs[t].id %>"></i>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="icons-right float-left">
-                                                    <i class="edit far fa-edit"
-                                                        data-id="<%= usrs[t].id %>"
-                                                        data-about="<%= usrs[t].product+ '*' +usrs[t].name+ '*' +usrs[t].title+ '*' +usrs[t].message %>"></i>
-                                                    <i class="remove fas fa-times"
-                                                        data-id="<%= usrs[t].id %>"
-                                                        data-name="<%= usrs[t].name %>"></i>
-                                                    <i class="caret fas fa-angle-down" data-id="<%= usrs[t].id %>"></i>
+                                                
+                                                <div id="par-<%= usrs[t].id %>" class="row my-4 deactivated">
+                                                    <div class="col-md-12">
+                                                        <hr>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="userImg">
+                                                            <img src="<%= usrs[t].pp %>" class="img-fluid"  />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="text-right my-2">
+                                                            <p>
+                                                                <%= usrs[t].country %>, <%= usrs[t].state %>
+                                                                <br>
+                                                                <%= usrs[t].gender %>
+                                                                <br>
+                                                                <a href="mailto:<%= usrs[t].email %>">
+                                                                    <%= usrs[t].email %>
+                                                                </a>
+                                                                <br>
+                                                                <a href="tel:<%= usrs[t].email %>">
+                                                                    <%= usrs[t].phone %>
+                                                                </a><br>
+                                                                <%= usrs[t].user_type%>, <%= usrs[t].user_id %>
+                                                                <br>
+                                                                Last login: <%= usrs[t].last_login %>
+                                                                <br>
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                 </div>
+
                                             </li>
 
                                         <% } %>
@@ -95,6 +126,7 @@
 
                 </div>
             </div>
+            <!-- Page Content End -->
         </div>
 
     </body>

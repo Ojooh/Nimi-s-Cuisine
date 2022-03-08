@@ -70,16 +70,20 @@
                                     <div class="card-body">
                                         <p class="mb-2">Customers</p>
                                         <p class="fs-30 mb-0"><%= cTot[0].total; %></p>
+                                        <p>
+                                            <%= ciTot[0].total; %> In Active Customers
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         <% } %>
-                        <% if (uTot && uTot.length> 0 ) { %>
+                        <% if (user && user.user_type == "SuperAdmin" && uTot && uTot.length> 0 ) { %>
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                 <div class="card card-tale">
                                     <div class="card-body">
                                         <p class="mb-2">Administrators</p>
                                         <p class="fs-30 mb-0"><%= uTot[0].total; %></p>
+                                        <p><%= uiTot[0].total; %> In Active Admins</p>
                                     </div>
                                 </div>
                             </div>

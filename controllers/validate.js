@@ -1,5 +1,6 @@
 // const User = require('./db_controller');
 var helper = require("./helper");
+const { v4: uuidv4 } = require('uuid');
 
 module.exports.validSocials = async (req) => {
 
@@ -222,17 +223,35 @@ module.exports.validUser = async (req) => {
     else if (helper.isEmpty(req.body.user_type)) {
         return [null, false, { message: 'User Type input not valid' }];
     }
-    else if (req.body.link && req.body.link != undefined && helper.isImage(req.body.link) == false) {
-        console.log(req.body.link);
+    else if (req.files && helper.isImage(req.files.link) == false) {
         return [null, false, { message: 'Profile Picture input not valid' }];
     }
     else {
+        let uid = "";
         req.body.fname = helper.sentenceCase(req.body.fname);
         req.body.lname = helper.sentenceCase(req.body.lname);
         let msg = req.body.fname + ' User Profile Created successfully'
         if (req.body.type != "add") {
             msg = req.body.fname + ' User Profile Updated successfully'
+        } else {
+            uid = uuidv4();
+            let link = req.get('host') + "/verify/" + uid;
+            console.log(link);
+            let options = {
+                from: "noreply@nimicuisine.com",
+                to: req.body.email,
+                subject: "Activate your Admin Account",
+                html: `<p>You have been registered as an admin for Nimi's cuisine.</p>
+                    <br> <br>
+                    <p>To activate your account follow this link: <a href="` + link + `">` + link + `</a>
+                    and set a Password for your account ` + req.body.email + `</p><br><br>
+
+                    Thank You and Kind regards!<br>
+                    From Admin Team Nimi Cuisine`
+            }
+            await helper.sendMail(options);
         }
+
         if (req.body.user_type == "SuperAdmin") {
             title = "ADMS"
             category = "admin_user"
@@ -241,9 +260,9 @@ module.exports.validUser = async (req) => {
             category = "admin_user"
         } else {
             title = "CUS"
-            category = "cus_update"
+            category = "cus_user"
         }
-        let extra = { id: await helper.generateUID(title, "users", 4), category: category }
+        let extra = { id: await helper.generateUID(title, "users", 4), category: category, uid: uid }
         return [extra, true, { message: msg }];
     }
 };

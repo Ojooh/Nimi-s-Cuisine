@@ -6,16 +6,34 @@ var telRegex = /^[\s()+-]*([0-9][\s()+-]*){6,20}$/;
 var passRegex = /^([a-z0-9]).{6,}$/;
 const DB = require('./db_controller.js');
 var nodemailer = require('nodemailer');
-var transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'davidmatthew708@gmail.com',
-        pass: 'jehovaheloini'
-    }
-});
+const { encrypt, decrypt } = require('./crypto');
 
-module.exports.sendMail = (options) => {
-    transporter.sendMail(options, function (error, info) {
+
+module.exports.createTransporter = async () => {
+    let param1 = ["email", "password"];
+    let param2 = "global";
+    let param3 = { "is_active": "1" };
+    var sql = DB.generateSelectSQL(param1, param2, param3);
+    var settings = await DB.runSQLQuery(sql);
+
+    const email = settings[0].email;
+    const password = decrypt(JSON.parse(settings[0].password));
+
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: email,
+            pass: password
+        }
+    });
+
+    return transporter;
+}
+
+module.exports.sendMail = async (options) => {
+    let trans = await this.createTransporter();
+
+    trans.sendMail(options, function (error, info) {
         if (error) {
             console.log(error);
         } else {
